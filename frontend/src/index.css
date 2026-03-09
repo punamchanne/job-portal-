@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #00B074;
+  --dark: #2B3940;
+  --light: #F1F8F5;
+  --text-gray: #666565;
+}
+
+body {
+  background-color: white;
+  color: var(--text-gray);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.border-primary {
+  border-color: var(--primary);
+}
+
+.btn-primary-job {
+  @apply py-3 px-8 text-white font-bold rounded-md transition-all transform active:scale-95;
+  background-color: var(--primary);
+}
+
+.btn-primary-job:hover {
+  background-color: #009663;
+}
+
+.btn-secondary-job {
+  @apply py-3 px-8 font-bold rounded-md transition-all transform active:scale-95 border;
+  color: var(--primary);
+  background-color: white;
+  border-color: var(--primary);
+}
+
+.btn-secondary-job:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+.section-title {
+  @apply text-4xl font-black mb-4 text-center;
+  color: var(--dark);
+}
+
+.category-card {
+  @apply p-8 bg-white border border-gray-100 rounded-lg text-center transition-all cursor-pointer;
+}
+
+.category-card:hover {
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  border-color: var(--primary);
+}
+
+.category-icon {
+  @apply w-16 h-16 mx-auto mb-4 rounded-lg flex items-center justify-center transition-all bg-emerald-50;
+  color: var(--primary);
+}
+
+/* We'll handle the icon hover in the React component or use a more specific CSS selector if needed */
+.category-card:hover .category-icon {
+  background-color: var(--primary);
+  color: white;
+}
+
+.job-item {
+  @apply p-6 border border-gray-100 rounded-lg flex flex-col md:flex-row items-center gap-6 transition-all;
+}
+
+.job-item:hover {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  border-color: rgba(0, 176, 116, 0.3);
+}
+
+.glass-nav {
+  @apply sticky top-0 z-[1000] border-b border-gray-100 backdrop-blur-md;
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+@layer utilities {
+  .tracking-tight-custom {
+    letter-spacing: -0.02em;
+  }
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #00B074 0%, #009663 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.shadow-soft {
+  box-shadow: 0 10px 40px -10px rgba(0, 176, 116, 0.05);
+}
+
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+}
