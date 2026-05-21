@@ -1,5 +1,5 @@
 # Jobify: AI-Based Job & Internship Recommendation System
-
+ 
 **Jobify** is a production-ready, highly scalable modern web application that leverages sophisticated NLP and Machine Learning techniques (TF-IDF, Cosine Similarity, Named Entity Recognition) to intelligently match candidates with tech employers based on skill gap analyses and resume parsed data.
 
 ## Features

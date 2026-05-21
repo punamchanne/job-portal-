@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import {
     LayoutDashboard, Users, Briefcase,
@@ -7,10 +7,24 @@ import {
     Settings, Bell, ChevronRight, Plus, FileCheck, User, CheckCircle
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import axios from 'axios'
 
 export default function DashboardLayout({ children, role, userName }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+    const [hasResume, setHasResume] = useState(false)
     const location = useLocation()
+    const userId = localStorage.getItem('userId')
+
+    // Check if candidate has a resume uploaded to adjust label
+    useEffect(() => {
+        if (role === 'candidate' && userId) {
+            axios.get(`http://localhost:8000/api/candidate/profile/${userId}`)
+                .then(res => {
+                    if (res.data.resume_path) setHasResume(true)
+                })
+                .catch(() => {})
+        }
+    }, [role, userId])
 
     // Sidebar Links based on Role
     const adminLinks = [
@@ -25,13 +39,14 @@ export default function DashboardLayout({ children, role, userName }) {
         { name: 'My Dashboard', path: '/candidate/dashboard', icon: <LayoutDashboard size={20} /> },
         { name: 'My Profile', path: '/candidate/profile', icon: <User size={20} /> },
         { name: 'Applied Jobs', path: '/candidate/applications', icon: <FileCheck size={20} /> },
-        { name: 'My Resume', path: '/candidate/resume-upload', icon: <FileText size={20} /> },
+        { name: hasResume ? 'Update Resume' : 'My Resume', path: '/candidate/resume-upload', icon: <FileText size={20} /> },
         { name: 'Best Jobs', path: '/candidate/recommendations', icon: <Target size={20} /> },
         { name: 'Skill Check', path: '/candidate/skill-gap', icon: <Activity size={20} /> },
     ]
 
     const employerLinks = [
         { name: 'Dashboard', path: '/employer/dashboard', icon: <LayoutDashboard size={20} /> },
+        { name: 'My Posted Jobs', path: '/employer/my-jobs', icon: <Briefcase size={20} /> },
         { name: 'Add New Job', path: '/employer/post-job', icon: <Plus size={20} /> },
         { name: 'Applicants', path: '/employer/applicants', icon: <Users size={20} /> },
     ]

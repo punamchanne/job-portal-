@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { UploadCloud, CheckCircle, Sparkles, FileText, X, ArrowRight, Zap } from 'lucide-react'
+import { UploadCloud, CheckCircle, Sparkles, FileText, X, ArrowRight, Zap, RefreshCw } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import DashboardLayout from '../../components/DashboardLayout'
 import { Link } from 'react-router-dom'
@@ -9,12 +9,24 @@ export default function ResumeUpload() {
     const [file, setFile] = useState(null)
     const [uploading, setUploading] = useState(false)
     const [result, setResult] = useState(null)
+    const [hasExistingResume, setHasExistingResume] = useState(false)
     const userName = localStorage.getItem('userName') || "User"
+    const userId = localStorage.getItem('userId')
+
+    // Check if user already has a resume uploaded
+    useEffect(() => {
+        if (userId) {
+            axios.get(`http://localhost:8000/api/candidate/profile/${userId}`)
+                .then(res => {
+                    if (res.data.resume_path) setHasExistingResume(true)
+                })
+                .catch(() => {})
+        }
+    }, [userId])
 
     const handleUpload = async (e) => {
         e.preventDefault()
         if (!file) return
-        const userId = localStorage.getItem('userId')
         const formData = new FormData()
         formData.append('file', file)
 
@@ -22,6 +34,7 @@ export default function ResumeUpload() {
         try {
             const res = await axios.post(`http://localhost:8000/api/candidate/upload-resume/${userId}`, formData)
             setResult(res.data.data)
+            setHasExistingResume(true) // mark as uploaded after success
         } catch (err) {
             alert("Oops! Could not read the file. Please try a PDF or Word file.")
         } finally {
@@ -34,8 +47,25 @@ export default function ResumeUpload() {
             <div className="max-w-4xl mx-auto flex flex-col gap-8">
                 {/* Header */}
                 <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">Update My <span className="text-[#00B074]">Resume</span></h2>
-                    <p className="text-gray-500 font-bold mt-1">Upload your latest file so our AI can find the right job for you.</p>
+                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">
+                        {hasExistingResume ? (
+                            <>Update My <span className="text-[#00B074]">Resume</span></>
+                        ) : (
+                            <>Upload My <span className="text-[#00B074]">Resume</span></>
+                        )}
+                    </h2>
+                    <p className="text-gray-500 font-bold mt-1">
+                        {hasExistingResume
+                            ? "Upload a new resume to update your profile and get better AI job matches."
+                            : "Upload your resume so our AI can find the right job for you."
+                        }
+                    </p>
+                    {hasExistingResume && !result && (
+                        <div className="mt-3 flex items-center gap-2 bg-emerald-50 border border-emerald-100 text-[#00B074] px-4 py-2 rounded-xl text-sm font-bold w-fit">
+                            <CheckCircle size={16} />
+                            You already have a resume on file. Upload a new one to update it.
+                        </div>
+                    )}
                 </motion.div>
 
                 {/* Main Upload Card */}
@@ -64,10 +94,12 @@ export default function ResumeUpload() {
                             ) : (
                                 <div className="flex flex-col items-center gap-6">
                                     <div className="bg-white p-6 rounded-3xl shadow-lg border border-gray-100 group-hover:scale-110 transition-transform">
-                                        <UploadCloud size={48} className="text-[#00B074]" />
+                                        {hasExistingResume ? <RefreshCw size={48} className="text-[#00B074]" /> : <UploadCloud size={48} className="text-[#00B074]" />}
                                     </div>
                                     <div className="text-center">
-                                        <h4 className="text-2xl font-black text-gray-900 mb-1">Upload PDF or Word</h4>
+                                        <h4 className="text-2xl font-black text-gray-900 mb-1">
+                                            {hasExistingResume ? "Upload New Resume (PDF or Word)" : "Upload PDF or Word"}
+                                        </h4>
                                         <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Maximum size: 5MB</p>
                                     </div>
                                 </div>
@@ -89,7 +121,7 @@ export default function ResumeUpload() {
                                 ) : (
                                     <>
                                         <Zap size={24} />
-                                        Scan My Resume
+                                        {hasExistingResume ? "Update & Scan Resume" : "Scan My Resume"}
                                     </>
                                 )}
                             </button>
@@ -131,7 +163,7 @@ export default function ResumeUpload() {
                                     <div className="pt-8 border-t border-gray-50 flex flex-col md:flex-row items-center gap-6">
                                         <div className="flex-grow">
                                             <h4 className="text-lg font-black text-gray-900 mb-1">Excellent!</h4>
-                                            <p className="text-gray-500 font-bold">Your profile is auto-filled. Please review your details before applying.</p>
+                                            <p className="text-gray-500 font-bold">Your profile has been updated. Please review your details before applying.</p>
                                         </div>
                                         <Link to="/candidate/profile" className="bg-[#2B3940] text-white px-10 py-5 rounded-2xl font-black text-lg hover:bg-[#1a2327] transition-all flex items-center gap-3 shadow-xl">
                                             Review My Profile <ArrowRight size={20} />

@@ -29,8 +29,8 @@ def signup(user: UserCreate):
         otp = str(random.randint(100000, 999999))
         user_dict["otp"] = otp
         user_dict["otp_expiry"] = datetime.utcnow() + timedelta(minutes=10)
-        # Send Email
-        send_otp_email(user.email, otp)
+        # Send Email with personalized greeting
+        send_otp_email(user.email, otp, user_name=user.name)
     else:
         user_dict["is_verified"] = True
     
@@ -108,5 +108,6 @@ def resend_otp(payload: dict):
         {"$set": {"otp": otp, "otp_expiry": expiry}}
     )
     
-    send_otp_email(email, otp)
+    # Re-send email with personalized greeting
+    send_otp_email(email, otp, user_name=user.get('name', 'User'))
     return {"message": "OTP sent successfully"}

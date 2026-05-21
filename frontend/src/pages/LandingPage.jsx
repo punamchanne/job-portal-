@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
     Search, MapPin, List, Mail, Check,
     ArrowRight, Heart, Briefcase, Users,
     TrendingUp, Headset, UserCheck, Settings,
     PieChart, PenTool, BookOpen, Facebook,
     Twitter, Linkedin, Instagram, PlayCircle,
-    Quote
+    Quote, CheckCircle
 } from 'lucide-react'
 
 // Use the copied image from public folder
@@ -15,6 +15,37 @@ const HERO_IMG = "/hero-bg.png";
 
 export default function LandingPage() {
     const [activeTab, setActiveTab] = useState('Featured')
+    const [searchKeyword, setSearchKeyword] = useState('')
+    const [wishlist, setWishlist] = useState(() => {
+        try { return JSON.parse(localStorage.getItem('wishlist') || '[]') } catch { return [] }
+    })
+    const [newsletterEmail, setNewsletterEmail] = useState('')
+    const [newsletterSuccess, setNewsletterSuccess] = useState(false)
+    const navigate = useNavigate()
+    const role = localStorage.getItem('role')
+
+    const toggleWishlist = (jobTitle) => {
+        setWishlist(prev => {
+            const updated = prev.includes(jobTitle)
+                ? prev.filter(t => t !== jobTitle)
+                : [...prev, jobTitle]
+            localStorage.setItem('wishlist', JSON.stringify(updated))
+            return updated
+        })
+    }
+
+    const handleNewsletterSignup = (e) => {
+        e.preventDefault()
+        if (!newsletterEmail.trim()) return
+        setNewsletterSuccess(true)
+        setNewsletterEmail('')
+        setTimeout(() => setNewsletterSuccess(false), 4000)
+    }
+
+    const handleSearch = (e) => {
+        e.preventDefault()
+        navigate(`/jobs${searchKeyword ? `?search=${encodeURIComponent(searchKeyword)}` : ''}`)
+    }
 
     const categories = [
         { icon: <TrendingUp />, name: "Marketing", vacancies: "123 Vacancy" },
@@ -27,13 +58,18 @@ export default function LandingPage() {
         { icon: <PenTool />, name: "Design & Creative", vacancies: "123 Vacancy" },
     ]
 
-    const jobs = [
-        { title: "Software Engineer", location: "Pune, India", type: "Full Time", salary: "₹8L - ₹15L", logo: "https://upload.wikimedia.org/wikipedia/commons/1/19/Mail.ru_logo.svg" },
-        { title: "Marketing Manager", location: "Mumbai, India", type: "Full Time", salary: "₹6L - ₹12L", logo: "https://upload.wikimedia.org/wikipedia/commons/a/ab/Android_Robot_Head.svg" },
-        { title: "Product Designer", location: "Bangalore, India", type: "Full Time", salary: "₹10L - ₹18L", logo: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Git-logo.svg" },
-        { title: "Creative Director", location: "Delhi, India", type: "Full Time", salary: "₹12L - ₹24L", logo: "https://upload.wikimedia.org/wikipedia/commons/3/33/Vercel_logo.svg" },
-        { title: "Wordpress Developer", location: "Remote, India", type: "Full Time", salary: "₹4L - ₹8L", logo: "https://upload.wikimedia.org/wikipedia/commons/9/93/Wordpress_Blue_logo.svg" },
+    const allJobs = [
+        { title: "Software Engineer", company: "TechCorp India", location: "Pune, India", type: "Full Time", salary: "₹8L - ₹15L" },
+        { title: "Marketing Manager", company: "BrandX Agency", location: "Mumbai, India", type: "Full Time", salary: "₹6L - ₹12L" },
+        { title: "Product Designer", company: "DesignHub", location: "Bangalore, India", type: "Full Time", salary: "₹10L - ₹18L" },
+        { title: "Creative Director", company: "Pixel Works", location: "Delhi, India", type: "Full Time", salary: "₹12L - ₹24L" },
+        { title: "Wordpress Developer", company: "WebSolutions", location: "Remote, India", type: "Part Time", salary: "₹4L - ₹8L" },
+        { title: "HR Specialist", company: "PeopleFirst", location: "Hyderabad, India", type: "Part Time", salary: "₹3L - ₹6L" },
     ]
+
+    const filteredJobs = activeTab === 'Featured'
+        ? allJobs
+        : allJobs.filter(j => j.type === activeTab)
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -63,8 +99,17 @@ export default function LandingPage() {
                             Jobify uses advanced AI to analyze your resume and match you with the best career opportunities. Join 10,000+ users finding their dream jobs today.
                         </p>
                         <div className="flex flex-wrap gap-4 mt-6">
-                            <Link to="/signup" className="btn-primary-job px-10 py-5 shadow-2xl shadow-[#00B074]/30 hover:shadow-[#00B074]/50">Get Started</Link>
-                            <Link to="/login" className="bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold py-5 px-10 rounded-md hover:bg-white/20 transition-all">Find A Talent</Link>
+                            {role ? (
+                                <>
+                                    <Link to={`/${role}/dashboard`} className="btn-primary-job px-10 py-5 shadow-2xl shadow-[#00B074]/30 hover:shadow-[#00B074]/50">Go to Dashboard</Link>
+                                    <Link to="/jobs" className="bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold py-5 px-10 rounded-md hover:bg-white/20 transition-all">Browse Jobs</Link>
+                                </>
+                            ) : (
+                                <>
+                                    <Link to="/signup" className="btn-primary-job px-10 py-5 shadow-2xl shadow-[#00B074]/30 hover:shadow-[#00B074]/50">Get Started</Link>
+                                    <Link to="/login" className="bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold py-5 px-10 rounded-md hover:bg-white/20 transition-all">Find A Talent</Link>
+                                </>
+                            )}
                         </div>
                     </motion.div>
                 </div>
@@ -72,26 +117,33 @@ export default function LandingPage() {
 
             {/* 2. SEARCH BAR OVERLAY */}
             <div className="max-w-[1320px] mx-auto px-6 w-full -mt-24 relative z-20">
-                <div className="bg-[#00B074] p-8 rounded-lg shadow-2xl flex flex-wrap lg:flex-nowrap items-center gap-4">
+                <form onSubmit={handleSearch} className="bg-[#00B074] p-8 rounded-lg shadow-2xl flex flex-wrap lg:flex-nowrap items-center gap-4">
                     <input
                         type="text"
-                        placeholder="Keyword"
+                        placeholder="Keyword (e.g. Developer, Marketing...)"
                         className="flex-grow min-w-0 bg-white border-0 py-4 px-6 rounded-md focus:ring-0 text-gray-800 font-medium"
+                        value={searchKeyword}
+                        onChange={e => setSearchKeyword(e.target.value)}
                     />
                     <select className="flex-grow min-w-0 bg-white border-0 py-4 px-6 rounded-md focus:ring-0 text-gray-500 font-medium cursor-pointer">
                         <option>Category</option>
                         <option>Marketing</option>
                         <option>Design</option>
+                        <option>Engineering</option>
+                        <option>Human Resource</option>
                     </select>
                     <select className="flex-grow min-w-0 bg-white border-0 py-4 px-6 rounded-md focus:ring-0 text-gray-500 font-medium cursor-pointer">
                         <option>Location</option>
-                        <option>New York</option>
                         <option>Remote</option>
+                        <option>Mumbai</option>
+                        <option>Pune</option>
+                        <option>Bangalore</option>
+                        <option>Delhi</option>
                     </select>
-                    <button className="bg-[#2B3940] text-white px-10 py-4 rounded-md font-bold uppercase tracking-wider hover:bg-black transition-all">
+                    <button type="submit" className="bg-[#2B3940] text-white px-10 py-4 rounded-md font-bold uppercase tracking-wider hover:bg-black transition-all">
                         Search
                     </button>
-                </div>
+                </form>
             </div>
 
             {/* 3. CATEGORY SECTION */}
@@ -102,16 +154,20 @@ export default function LandingPage() {
                         {categories.map((cat, i) => (
                             <motion.div
                                 key={i}
-                                className="category-card"
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.1 }}
                             >
-                                <div className="category-icon text-3xl">
-                                    {cat.icon}
-                                </div>
-                                <h3 className="text-xl font-bold text-[#2B3940] mb-2">{cat.name}</h3>
-                                <p className="text-[#00B074] font-bold">{cat.vacancies}</p>
+                                <Link
+                                    to={`/jobs?search=${encodeURIComponent(cat.name)}`}
+                                    className="category-card block group"
+                                >
+                                    <div className="category-icon text-3xl group-hover:bg-[#00B074] group-hover:text-white transition-all duration-300">
+                                        {cat.icon}
+                                    </div>
+                                    <h3 className="text-xl font-bold text-[#2B3940] mb-2">{cat.name}</h3>
+                                    <p className="text-[#00B074] font-bold">{cat.vacancies}</p>
+                                </Link>
                             </motion.div>
                         ))}
                     </div>
@@ -122,11 +178,45 @@ export default function LandingPage() {
             <section id="about" className="py-24 bg-white overflow-hidden">
                 <div className="max-w-[1320px] mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
                     <div className="relative">
+                        {/* Decorative blob */}
+                        <div className="absolute -z-10 w-72 h-72 bg-[#00B074]/10 rounded-full -bottom-10 -left-10 blur-2xl"></div>
                         <div className="grid grid-cols-2 gap-4">
-                            <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=400&h=500" className="rounded-lg shadow-lg" alt="office 1" />
-                            <img src="https://images.unsplash.com/photo-1522071823991-b9671f9d7f1f?auto=format&fit=crop&q=80&w=400&h=300" className="rounded-lg shadow-lg mt-12" alt="office 2" />
-                            <img src="https://images.unsplash.com/photo-1517245327032-96a3239a531e?auto=format&fit=crop&q=80&w=400&h=300" className="rounded-lg shadow-lg -mt-12" alt="office 3" />
-                            <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=400&h=500" className="rounded-lg shadow-lg" alt="office 4" />
+                            {/* Col 1 - two images stacked, second shifted down */}
+                            <div className="flex flex-col gap-4">
+                                <img
+                                    src="/office_team.png"
+                                    className="rounded-2xl shadow-xl w-full object-cover h-52"
+                                    alt="Team collaboration"
+                                />
+                                <img
+                                    src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=400&h=300"
+                                    className="rounded-2xl shadow-xl w-full object-cover h-52 mt-6"
+                                    alt="Modern workspace"
+                                />
+                            </div>
+                            {/* Col 2 - two images stacked, first shifted down */}
+                            <div className="flex flex-col gap-4 mt-10">
+                                <img
+                                    src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=400&h=300"
+                                    className="rounded-2xl shadow-xl w-full object-cover h-52"
+                                    alt="Office meeting"
+                                />
+                                <img
+                                    src="/job_interview.png"
+                                    className="rounded-2xl shadow-xl w-full object-cover h-52 mt-6"
+                                    alt="Job interview"
+                                />
+                            </div>
+                        </div>
+                        {/* Floating badge */}
+                        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white rounded-2xl shadow-2xl px-6 py-3 flex items-center gap-3 border border-gray-100">
+                            <div className="w-10 h-10 bg-[#00B074]/10 rounded-xl flex items-center justify-center">
+                                <CheckCircle size={20} className="text-[#00B074]" />
+                            </div>
+                            <div>
+                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Success Rate</p>
+                                <p className="text-lg font-black text-[#2B3940]">10,000+ Hired</p>
+                            </div>
                         </div>
                     </div>
                     <div className="flex flex-col gap-6">
@@ -149,7 +239,9 @@ export default function LandingPage() {
                                 </li>
                             ))}
                         </ul>
-                        <button className="btn-primary-job self-start mt-4 px-12 py-4 shadow-lg shadow-emerald-100">Learn More About AI</button>
+                        <Link to="/features" className="btn-primary-job self-start mt-4 px-12 py-4 shadow-lg shadow-emerald-100 inline-block text-center">
+                            Learn More About AI
+                        </Link>
                     </div>
                 </div>
             </section>
@@ -174,18 +266,24 @@ export default function LandingPage() {
 
                     {/* Job List */}
                     <div className="flex flex-col gap-6">
-                        {jobs.map((job, i) => (
+                        {filteredJobs.length === 0 ? (
+                            <div className="text-center py-12 text-gray-400 font-bold">
+                                No jobs found for this category.
+                            </div>
+                        ) : filteredJobs.map((job, i) => (
                             <motion.div
                                 key={i}
                                 className="job-item bg-white"
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
                             >
-                                <div className="w-20 h-20 border rounded-lg flex items-center justify-center p-3 shrink-0">
-                                    <img src={job.logo} alt="logo" className="w-full h-full object-contain" />
+                                {/* Company Logo / Initial */}
+                                <div className="w-20 h-20 border rounded-lg flex items-center justify-center p-3 shrink-0 bg-emerald-50 font-black text-2xl text-[#00B074]">
+                                    {job.company.charAt(0).toUpperCase()}
                                 </div>
                                 <div className="flex-grow">
                                     <h3 className="text-2xl font-black text-[#2B3940] tracking-tight">{job.title}</h3>
+                                    <p className="text-sm font-bold text-[#00B074] mt-1">{job.company}</p>
                                     <div className="flex flex-wrap gap-4 mt-2 text-sm font-medium text-[#666565]">
                                         <span className="flex items-center gap-1"><MapPin size={16} className="text-[#00B074]" /> {job.location}</span>
                                         <span className="flex items-center gap-1"><TrendingUp size={16} className="text-[#00B074]" /> {job.type}</span>
@@ -194,8 +292,14 @@ export default function LandingPage() {
                                 </div>
                                 <div className="flex flex-col items-end gap-3 text-right shrink-0">
                                     <div className="flex gap-4">
-                                        <button className="bg-[#F1F8F5] p-3 rounded-lg text-[#00B074] hover:bg-[#00B074] hover:text-white transition-all"><Heart size={20} /></button>
-                                        <Link to="/login" className="btn-primary-job py-3 px-6">Apply Now</Link>
+                                        <button
+                                            onClick={() => toggleWishlist(job.title)}
+                                            className={`p-3 rounded-lg transition-all ${wishlist.includes(job.title) ? 'bg-[#00B074] text-white' : 'bg-[#F1F8F5] text-[#00B074] hover:bg-[#00B074] hover:text-white'}`}
+                                            title={wishlist.includes(job.title) ? "Remove from Wishlist" : "Add to Wishlist"}
+                                        >
+                                            <Heart size={20} fill={wishlist.includes(job.title) ? "currentColor" : "none"} />
+                                        </button>
+                                        <Link to={role ? `/${role}/dashboard` : '/login'} className="btn-primary-job py-3 px-6">Apply Now</Link>
                                     </div>
                                     <p className="text-xs font-bold text-gray-400">Apply before: 30 Mar, 2026</p>
                                 </div>
@@ -220,8 +324,8 @@ export default function LandingPage() {
                                 <div className="flex items-center gap-4">
                                     <img src={`https://i.pravatar.cc/100?u=${i + 100}`} className="w-14 h-14 rounded-full border-4 border-white shadow-sm" alt="client" />
                                     <div>
-                                        <h4 className="font-black text-[#2B3940]">Client Name</h4>
-                                        <p className="text-sm text-gray-500 font-bold">Profession</p>
+                                        <h4 className="font-black text-[#2B3940]">Happy User</h4>
+                                        <p className="text-sm text-gray-500 font-bold">Software Engineer</p>
                                     </div>
                                 </div>
                             </div>
@@ -236,28 +340,28 @@ export default function LandingPage() {
                     <div className="flex flex-col gap-6">
                         <h3 className="text-2xl font-black text-white">Company</h3>
                         <div className="flex flex-col gap-3 font-medium">
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> About Us</a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Contact Us</a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Our Services</a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Privacy Policy</a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Terms & Condition</a>
+                            <Link to="/about" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> About Us</Link>
+                            <Link to="/contact" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Contact Us</Link>
+                            <Link to="/features" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Our Services</Link>
+                            <Link to="/" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Privacy Policy</Link>
+                            <Link to="/" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Terms & Condition</Link>
                         </div>
                     </div>
                     <div className="flex flex-col gap-6">
                         <h3 className="text-2xl font-black text-white">Quick Links</h3>
                         <div className="flex flex-col gap-3 font-medium">
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> About Us</a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Contact Us</a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Our Services</a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Privacy Policy</a>
-                            <a href="#" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Terms & Condition</a>
+                            <Link to="/" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Home</Link>
+                            <Link to="/jobs" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Find Jobs</Link>
+                            <Link to="/features" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> AI Features</Link>
+                            <Link to="/about" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> About Us</Link>
+                            <Link to="/contact" className="hover:text-white transition-colors flex items-center gap-2"><ArrowRight size={14} /> Contact</Link>
                         </div>
                     </div>
                     <div className="flex flex-col gap-6 text-white/80">
                         <h3 className="text-2xl font-black text-white">Contact</h3>
                         <div className="flex flex-col gap-4 font-medium">
-                            <p className="flex items-center gap-3"><MapPin size={18} className="text-white" /> 123 Street, New York, USA</p>
-                            <p className="flex items-center gap-3"><Mail size={18} className="text-white" /> info@example.com</p>
+                            <p className="flex items-center gap-3"><MapPin size={18} className="text-white shrink-0" /> 123 Jobify Street, Tech City, Mumbai - 400001</p>
+                            <p className="flex items-center gap-3"><Mail size={18} className="text-white shrink-0" /> support@jobify.com</p>
                             <div className="flex gap-4 mt-2">
                                 <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#00B074] hover:border-[#00B074] transition-all"><Twitter size={18} /></a>
                                 <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#00B074] hover:border-[#00B074] transition-all"><Facebook size={18} /></a>
@@ -268,26 +372,34 @@ export default function LandingPage() {
                     </div>
                     <div className="flex flex-col gap-6">
                         <h3 className="text-2xl font-black text-white">Newsletter</h3>
-                        <p className="font-medium">Dolor amet sit justo amet elitr clita ipsum elitr est.</p>
-                        <div className="relative mt-2">
+                        <p className="font-medium text-white/70">Subscribe to get the latest job alerts and career tips delivered to your inbox.</p>
+                        <form onSubmit={handleNewsletterSignup} className="relative mt-2">
                             <input
-                                type="text"
-                                placeholder="Your email"
+                                type="email"
+                                placeholder="Your email address"
+                                value={newsletterEmail}
+                                onChange={e => setNewsletterEmail(e.target.value)}
                                 className="w-full bg-white border-0 py-4 pl-6 pr-24 rounded-md focus:ring-0 text-gray-800"
+                                required
                             />
-                            <button className="absolute right-2 top-2 bottom-2 bg-[#00B074] text-white px-5 rounded font-bold text-sm tracking-widest hover:bg-[#009663] transition-all">
+                            <button type="submit" className="absolute right-2 top-2 bottom-2 bg-[#00B074] text-white px-5 rounded font-bold text-sm tracking-widest hover:bg-[#009663] transition-all">
                                 SignUp
                             </button>
-                        </div>
+                        </form>
+                        {newsletterSuccess && (
+                            <div className="flex items-center gap-2 bg-emerald-900/40 border border-emerald-500/30 text-emerald-400 px-4 py-3 rounded-lg text-sm font-bold">
+                                <CheckCircle size={16} /> Subscribed successfully!
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="max-w-[1320px] mx-auto px-6 mt-10 flex flex-wrap justify-between items-center gap-4 text-sm font-medium">
-                    <p>© <a href="#" className="text-white border-b border-white hover:text-[#00B074] hover:border-[#00B074] transition-all">Your Site Name</a>, All Right Reserved.</p>
+                    <p>© <Link to="/" className="text-white border-b border-white hover:text-[#00B074] hover:border-[#00B074] transition-all">Jobify</Link>, All Right Reserved.</p>
                     <div className="flex gap-6">
-                        <a href="#" className="hover:text-white">Home</a>
-                        <a href="#" className="hover:text-white">Cookies</a>
-                        <a href="#" className="hover:text-white">Help</a>
-                        <a href="#" className="hover:text-white">FQAs</a>
+                        <Link to="/" className="hover:text-white">Home</Link>
+                        <Link to="/about" className="hover:text-white">About</Link>
+                        <Link to="/contact" className="hover:text-white">Contact</Link>
+                        <Link to="/jobs" className="hover:text-white">Jobs</Link>
                     </div>
                 </div>
             </footer>

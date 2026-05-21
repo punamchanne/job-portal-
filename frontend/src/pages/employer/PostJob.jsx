@@ -22,7 +22,8 @@ export default function PostJob() {
             setSuccess(true)
             setTimeout(() => navigate('/employer/dashboard'), 2000)
         } catch (err) {
-            alert("Error posting job")
+            const msg = err.response?.data?.detail || "Error posting job. Please try again."
+            alert("❌ " + msg)
         }
     }
 

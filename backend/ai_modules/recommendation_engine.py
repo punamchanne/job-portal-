@@ -38,14 +38,13 @@ def recommend_jobs_tfidf(candidate_skills, jobs):
     
     recommended_jobs = []
     for idx in sorted_indices:
-        if similarities[idx] > 0.05: # Ensure at least some similarity
-            job_copy = jobs[idx].copy()
-            job_copy['ai_match_score'] = round(float(similarities[idx]) * 100, 2)
-            # Re-calculate literal match percentage as requested "Match Percentage Algorithm"
-            job_copy['match_percentage'] = calculate_match_percentage(
-                candidate_skills, job_copy.get('required_skills', [])
-            )
-            recommended_jobs.append(job_copy)
+        job_copy = jobs[idx].copy()
+        job_copy['ai_match_score'] = round(float(similarities[idx]) * 100, 2)
+        # Re-calculate literal match percentage
+        job_copy['match_percentage'] = calculate_match_percentage(
+            candidate_skills, job_copy.get('required_skills', [])
+        )
+        recommended_jobs.append(job_copy)
             
-    # Return top 10 recommended jobs
-    return recommended_jobs[:10]
+    # Return all jobs sorted by match score (no hard limit)
+    return recommended_jobs

@@ -21,6 +21,7 @@ import CandidateProfile from './pages/candidate/CandidateProfile'
 import EmployerDashboard from './pages/employer/Dashboard'
 import PostJob from './pages/employer/PostJob'
 import Applicants from './pages/employer/Applicants'
+import MyJobs from './pages/employer/MyJobs'
 
 // Admin
 import AdminDashboard from './pages/admin/Dashboard'
@@ -40,7 +41,8 @@ function AppContent() {
   return (
     <div className="min-h-screen flex flex-col font-sans">
       {!shouldHideNav && <Navbar />}
-      {location.pathname.startsWith('/candidate') && <Chatbot />}
+      {/* Interview Prep Chatbot – visible ONLY for candidates, never for admin or employer */}
+      {location.pathname.startsWith('/candidate') && !location.pathname.startsWith('/admin') && !location.pathname.startsWith('/employer') && <Chatbot />}
       <main className={`flex-grow flex flex-col ${!shouldHideNav ? 'pt-16' : ''}`}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -61,6 +63,7 @@ function AppContent() {
 
           {/* Employer Routes */}
           <Route path="/employer/dashboard" element={<EmployerDashboard />} />
+          <Route path="/employer/my-jobs" element={<MyJobs />} />
           <Route path="/employer/post-job" element={<PostJob />} />
           <Route path="/employer/applicants" element={<Applicants />} />
 

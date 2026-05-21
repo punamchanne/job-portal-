@@ -9,16 +9,28 @@ router = APIRouter(prefix="/api/employer", tags=["employer"])
 
 @router.post("/jobs", response_model=JobResponse)
 def post_job(job: JobCreate, current_user_id: str):
-    # Retrieve user's company info
+    # Retrieve user's company info, auto-create if not found
     company = companies_collection.find_one({"user_id": current_user_id})
     if not company:
-        raise HTTPException(status_code=400, detail="Company profile not found")
+        # Get user info for company name fallback
+        user = users_collection.find_one({"id": current_user_id})
+        user_name = user.get("name", "Employer") if user else "Employer"
+        # Auto-create company profile
+        companies_collection.insert_one({
+            "user_id": current_user_id,
+            "company_name": f"{user_name}'s Company",
+            "industry": "",
+            "description": ""
+        })
+        company = companies_collection.find_one({"user_id": current_user_id})
 
     job_dict = job.model_dump()
     job_dict["job_id"] = str(uuid.uuid4())
     job_dict["company_id"] = current_user_id
     job_dict["company_name"] = company.get("company_name", "Unknown")
     job_dict["created_at"] = datetime.utcnow()
+    # Save skills_required as alias for compatibility
+    job_dict["skills_required"] = job_dict.get("required_skills", [])
     
     jobs_collection.insert_one(job_dict)
     

@@ -5,9 +5,14 @@ import { Menu, X, ChevronDown } from 'lucide-react'
 export default function Navbar() {
     const navigate = useNavigate()
     const location = useLocation()
-    const role = localStorage.getItem('role') || null
+    const [role, setRole] = useState(localStorage.getItem('role') || null)
     const [isOpen, setIsOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
+
+    // Re-read role from storage when route changes (handles login/logout)
+    useEffect(() => {
+        setRole(localStorage.getItem('role') || null)
+    }, [location.pathname])
 
     const handleLogout = () => {
         localStorage.clear()
