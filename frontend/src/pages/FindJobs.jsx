@@ -11,6 +11,7 @@ export default function FindJobs() {
     const [copiedId, setCopiedId] = useState(null)
     const [filterTypes, setFilterTypes] = useState([])
     const [salaryMax, setSalaryMax] = useState(50)
+    const [selectedLocation, setSelectedLocation] = useState('')
     const [wishlist, setWishlist] = useState(() => {
         try { return JSON.parse(localStorage.getItem('wishlist') || '[]') } catch { return [] }
     })
@@ -58,7 +59,9 @@ export default function FindJobs() {
         const salaryVal = job.salary || job.salary_range || ''
         const jobSalaryMax = parseSalaryMax(salaryVal)
         const matchesSalary = jobSalaryMax === 0 || jobSalaryMax <= salaryMax
-        return matchesSearch && matchesType && matchesSalary
+        const matchesLocation = !selectedLocation ||
+            job.location?.toLowerCase().includes(selectedLocation.toLowerCase())
+        return matchesSearch && matchesType && matchesSalary && matchesLocation
     })
 
     const copyToClipboard = (text) => {
@@ -112,18 +115,22 @@ export default function FindJobs() {
                         </div>
                         <div className="hidden md:flex flex-grow items-center bg-gray-50 rounded-xl px-5 border border-gray-100 group focus-within:ring-2 focus-within:ring-[#00B074]">
                             <MapPin className="text-gray-400 group-focus-within:text-[#00B074] transition-colors" />
-                            <select className="w-full py-5 bg-transparent border-0 focus:ring-0 text-gray-500 font-medium cursor-pointer">
-                                <option>Location</option>
-                                <option>Remote</option>
-                                <option>Mumbai</option>
-                                <option>Pune</option>
-                                <option>Bangalore</option>
-                                <option>Delhi</option>
+                            <select
+                                className="w-full py-5 bg-transparent border-0 focus:ring-0 text-gray-500 font-medium cursor-pointer"
+                                value={selectedLocation}
+                                onChange={(e) => setSelectedLocation(e.target.value)}
+                            >
+                                <option value="">Location</option>
+                                <option value="Remote">Remote</option>
+                                <option value="Mumbai">Mumbai</option>
+                                <option value="Pune">Pune</option>
+                                <option value="Bangalore">Bangalore</option>
+                                <option value="Delhi">Delhi</option>
                             </select>
                         </div>
                         <button
                             className="bg-[#00B074] text-white px-10 py-5 rounded-xl font-black uppercase tracking-wider hover:bg-[#009663] transition-all shadow-xl shadow-emerald-400/20"
-                            onClick={() => {}}
+                            onClick={() => { /* search is live/reactive */ }}
                         >
                             Search
                         </button>
@@ -202,7 +209,7 @@ export default function FindJobs() {
                         <div className="bg-white p-20 rounded-[3rem] text-center border border-dashed border-gray-200">
                             <p className="text-xl font-black text-gray-400">No jobs found matching your filters.</p>
                             <button
-                                onClick={() => { setSearchTerm(''); setFilterTypes([]); setSalaryMax(50) }}
+                                onClick={() => { setSearchTerm(''); setFilterTypes([]); setSalaryMax(50); setSelectedLocation('') }}
                                 className="mt-4 text-[#00B074] font-bold hover:underline"
                             >
                                 Clear all filters
