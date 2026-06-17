@@ -9,7 +9,6 @@ export default function AdminApplicants() {
     const [selectedJob, setSelectedJob] = useState('')
     const [applicants, setApplicants] = useState([])
     const [loading, setLoading] = useState(false)
-    const [showShortlistedOnly, setShowShortlistedOnly] = useState(false)
     const userName = localStorage.getItem('userName') || "Admin"
 
     useEffect(() => {
@@ -27,7 +26,8 @@ export default function AdminApplicants() {
             const fetchApplicants = async () => {
                 setLoading(true)
                 try {
-                    const res = await axios.get(`http://localhost:8000/api/employer/applicants/${selectedJob}`)
+                    const role = localStorage.getItem('role') || 'admin'
+                    const res = await axios.get(`http://localhost:8000/api/employer/applicants/${selectedJob}?role=${role}`)
                     const sortedApplicants = res.data.sort((a, b) => b.match_score - a.match_score)
                     setApplicants(sortedApplicants)
                 } catch (err) { }
@@ -39,9 +39,7 @@ export default function AdminApplicants() {
         }
     }, [selectedJob])
 
-    const filteredApplicants = showShortlistedOnly 
-        ? applicants.filter(app => app.status === 'Shortlisted')
-        : applicants
+    const filteredApplicants = applicants
 
     return (
         <DashboardLayout role="admin" userName={userName}>
@@ -68,19 +66,7 @@ export default function AdminApplicants() {
                         <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={24} />
                     </div>
 
-                    {selectedJob && (
-                        <button
-                            onClick={() => setShowShortlistedOnly(!showShortlistedOnly)}
-                            className={`px-8 py-5 rounded-2xl font-black text-sm transition-all border flex items-center gap-2 whitespace-nowrap shadow-sm group ${
-                                showShortlistedOnly 
-                                ? 'bg-emerald-50 text-[#00B074] border-emerald-100' 
-                                : 'bg-white text-gray-400 border-gray-100 hover:border-[#00B074] hover:text-[#00B074]'
-                            }`}
-                        >
-                            <CheckCircle size={20} className={showShortlistedOnly ? "text-[#00B074]" : "text-gray-300"} />
-                            {showShortlistedOnly ? "Shortlisted Talent" : "All Applicants"}
-                        </button>
-                    )}
+
                 </div>
 
                 {/* Applicants List Area */}
@@ -140,10 +126,10 @@ export default function AdminApplicants() {
                             </div>
                             <div>
                                 <h3 className="text-xl font-black text-gray-400 italic">
-                                    {showShortlistedOnly ? "No students have been shortlisted for this job yet." : "No applicants found for this job yet."}
+                                    No applicants found for this job yet.
                                 </h3>
                                 <p className="text-gray-300 font-bold text-sm mt-1 uppercase tracking-widest">
-                                    {showShortlistedOnly ? "Review all candidates to find the best talent." : "Waiting for candidates..."}
+                                    Waiting for candidates...
                                 </p>
                             </div>
                         </div>

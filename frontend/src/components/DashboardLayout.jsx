@@ -30,7 +30,6 @@ export default function DashboardLayout({ children, role, userName }) {
     const adminLinks = [
         { name: 'Overview', path: '/admin/dashboard', icon: <LayoutDashboard size={20} /> },
         { name: 'Review Applicants', path: '/admin/applicants', icon: <FileText size={20} /> },
-        { name: 'Shortlisted Pool', path: '/admin/shortlisted', icon: <CheckCircle size={20} /> },
         { name: 'Manage People', path: '/admin/manage-users', icon: <Users size={20} /> },
         { name: 'Manage Jobs', path: '/admin/manage-jobs', icon: <Briefcase size={20} /> },
     ]

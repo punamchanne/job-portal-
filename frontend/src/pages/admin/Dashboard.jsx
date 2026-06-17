@@ -7,7 +7,7 @@ import { motion } from 'framer-motion'
 import DashboardLayout from '../../components/DashboardLayout'
 
 export default function AdminDashboard() {
-    const [stats, setStats] = useState({ total_users: 0, total_jobs: 0, total_companies: 0, total_applications: 0, total_shortlisted: 0, recent_activity: [] })
+    const [stats, setStats] = useState({ total_users: 0, total_jobs: 0, total_companies: 0, total_applications: 0, recent_activity: [] })
     const userName = localStorage.getItem('userName') || "Admin"
 
     useEffect(() => {
@@ -23,7 +23,6 @@ export default function AdminDashboard() {
     const data = [
         { name: 'People Joined', value: stats.total_users, color: '#00B074', icon: <Users /> },
         { name: 'Active Jobs', value: stats.total_jobs, color: '#3B82F6', icon: <Briefcase /> },
-        { name: 'Shortlisted', value: stats.total_shortlisted, color: '#F59E0B', icon: <CheckCircle /> },
         { name: 'Apps Received', value: stats.total_applications, color: '#EF4444', icon: <FileCheck /> }
     ]
 

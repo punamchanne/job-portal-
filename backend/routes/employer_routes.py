@@ -61,8 +61,11 @@ def get_dashboard_stats(user_id: str):
     }
 
 @router.get("/applicants/{job_id}")
-def get_applicants(job_id: str):
-    applications = list(applications_collection.find({"job_id": job_id}, {"_id": 0}))
+def get_applicants(job_id: str, role: str = None):
+    query = {"job_id": job_id}
+    if role == "admin":
+        query["status"] = {"$ne": "Shortlisted"}
+    applications = list(applications_collection.find(query, {"_id": 0}))
     for app in applications:
         # get user info
         user = users_collection.find_one({"id": app["candidate_id"]}, {"_id": 0, "password": 0})

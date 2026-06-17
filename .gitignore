@@ -15,3 +15,6 @@ dist/
 .vscode/
 .idea/
 .gemini/
+
+# Uploads
+backend/uploads/
