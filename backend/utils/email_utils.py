@@ -64,3 +64,57 @@ def send_otp_email(email_to, otp, user_name="User"):
     except Exception as e:
         print(f"Error sending email: {str(e)}")
         return False
+
+def send_shortlist_email(email_to, candidate_name, job_title, company_name):
+    mail_server = os.getenv("MAIL_SERVER")
+    mail_port = int(os.getenv("MAIL_PORT", 587))
+    mail_username = os.getenv("MAIL_USERNAME")
+    mail_password = os.getenv("MAIL_PASSWORD")
+    mail_from = os.getenv("MAIL_FROM")
+
+    if not all([mail_server, mail_username, mail_password, mail_from]):
+        print("Email configuration is incomplete. Skipping email.")
+        return False
+
+    try:
+        msg = MIMEMultipart()
+        msg['From'] = mail_from
+        msg['To'] = email_to
+        msg['Subject'] = f"Congratulations! You are shortlisted for {job_title} - Jobify"
+
+        body = f"""
+        <html>
+            <body style="font-family: Arial, sans-serif; background-color: #f4f7f6; padding: 20px;">
+                <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 40px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    <h1 style="color: #00B074; text-align: center; font-size: 28px; font-weight: 800; margin-bottom: 20px;">Congratulations! 🎉</h1>
+                    <p style="color: #555555; font-size: 16px;">Hello <strong>{candidate_name}</strong>,</p>
+                    <p style="color: #555555; font-size: 16px; line-height: 1.6;">
+                        Great news! You have been <strong>shortlisted</strong> by <strong>{company_name}</strong> for the position of <strong>{job_title}</strong>.
+                    </p>
+                    <p style="color: #555555; font-size: 16px; line-height: 1.6;">
+                        The hiring team will contact you shortly regarding the next steps in the interview process. Please keep an eye on your email inbox and dashboard notifications.
+                    </p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="http://localhost:5173/candidate/dashboard" style="background-color: #00B074; color: white; padding: 15px 30px; text-decoration: none; font-weight: bold; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 176, 116, 0.2);">
+                            Go to Dashboard
+                        </a>
+                    </div>
+                    <hr style="border: 0; border-top: 1px solid #eeeeee; margin: 30px 0;">
+                    <p style="text-align: center; color: #bbbbbb; font-size: 12px;">
+                        &copy; 2026 Jobify. All rights reserved. | This is an automated message, please do not reply.
+                    </p>
+                </div>
+            </body>
+        </html>
+        """
+        msg.attach(MIMEText(body, 'html'))
+
+        server = smtplib.SMTP(mail_server, mail_port)
+        server.starttls()
+        server.login(mail_username, mail_password)
+        server.send_message(msg)
+        server.quit()
+        return True
+    except Exception as e:
+        print(f"Error sending shortlist email: {str(e)}")
+        return False

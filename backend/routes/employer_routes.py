@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from typing import List
 from database import jobs_collection, companies_collection, applications_collection, users_collection
 from models.job_model import JobCreate, JobResponse
@@ -73,14 +73,40 @@ def get_applicants(job_id: str, role: str = None):
     return applications
 
 @router.put("/applications/{application_id}/status")
-def update_application_status(application_id: str, payload: dict):
+def update_application_status(application_id: str, payload: dict, background_tasks: BackgroundTasks):
     # payload: {"status": "Shortlisted"}
+    status = payload.get("status")
+
+    # Fetch application first to get candidate_id and job_id
+    app = applications_collection.find_one({"application_id": application_id})
+    if not app:
+        raise HTTPException(status_code=404, detail="Application not found")
+
     res = applications_collection.update_one(
         {"application_id": application_id},
-        {"$set": {"status": payload["status"]}}
+        {"$set": {"status": status}}
     )
-    if res.modified_count == 0:
+    if res.matched_count == 0:
         raise HTTPException(status_code=404, detail="Application not found")
+
+    if status == "Shortlisted":
+        candidate_id = app.get("candidate_id")
+        job_id = app.get("job_id")
+
+        user = users_collection.find_one({"id": candidate_id})
+        if user:
+            candidate_name = user.get("name", "Candidate")
+            candidate_email = user.get("email")
+
+            job = jobs_collection.find_one({"job_id": job_id})
+            if job:
+                job_title = job.get("title", "Position")
+                company_name = job.get("company_name", "the Company")
+
+                if candidate_email:
+                    from utils.email_utils import send_shortlist_email
+                    background_tasks.add_task(send_shortlist_email, candidate_email, candidate_name, job_title, company_name)
+
     return {"message": "Status updated successfully"}
 
 @router.put("/profile/{user_id}")
