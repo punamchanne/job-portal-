@@ -189,7 +189,7 @@ export default function LandingPage() {
                                     alt="Team collaboration"
                                 />
                                 <img
-                                    src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=400&h=300"
+                                    src="/modern_workspace.png"
                                     className="rounded-2xl shadow-xl w-full object-cover h-52 mt-6"
                                     alt="Modern workspace"
                                 />
@@ -197,7 +197,7 @@ export default function LandingPage() {
                             {/* Col 2 - two images stacked, first shifted down */}
                             <div className="flex flex-col gap-4 mt-10">
                                 <img
-                                    src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=400&h=300"
+                                    src="/office_meeting.png"
                                     className="rounded-2xl shadow-xl w-full object-cover h-52"
                                     alt="Office meeting"
                                 />

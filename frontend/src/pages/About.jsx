@@ -30,7 +30,7 @@ export default function About() {
                     viewport={{ once: true }}
                 >
                     <img
-                        src="https://images.unsplash.com/photo-1522071823991-b9671f9d7f1f?auto=format&fit=crop&q=80&w=800&h=600"
+                        src="/team_collaboration.png"
                         alt="Our Team"
                         className="rounded-2xl shadow-2xl"
                     />
