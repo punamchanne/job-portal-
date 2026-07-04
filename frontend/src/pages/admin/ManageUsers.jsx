@@ -45,31 +45,31 @@ export default function ManageUsers() {
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div>
-                        <h2 className="text-3xl font-black text-gray-900 tracking-tight">Manage <span className="text-[#00B074]">People</span></h2>
-                        <p className="text-gray-500 font-bold mt-1">Total {users.length} users registered on the platform.</p>
+                        <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Manage <span className="text-[#F97316]">People</span></h2>
+                        <p className="text-gray-500 font-semibold text-sm mt-1">Total {users.length} users registered on the platform.</p>
                     </div>
                 </div>
 
-                {/* Search & Filter Bar (Mock) */}
-                <div className="bg-white p-4 rounded-3xl border border-gray-100 flex flex-wrap gap-4 shadow-sm items-center">
-                    <div className="flex-grow flex items-center bg-gray-50 px-5 py-3 rounded-2xl border border-gray-100 group focus-within:ring-2 focus-within:ring-[#00B074]">
-                        <Search className="text-gray-400 group-focus-within:text-[#00B074] transition-colors" />
-                        <input type="text" placeholder="Search by name or email..." className="w-full bg-transparent border-0 focus:ring-0 font-medium ml-3" />
+                {/* Search & Filter Bar */}
+                <div className="bg-white p-4 rounded-2xl border border-gray-100 flex flex-wrap gap-4 shadow-sm items-center">
+                    <div className="flex-grow flex items-center bg-gray-50 px-5 py-3 rounded-2xl border border-gray-100 focus-within:border-[#F97316] transition-colors">
+                        <Search className="text-gray-400 shrink-0" size={18} />
+                        <input type="text" placeholder="Search by name or email address..." className="w-full bg-transparent border-0 focus:outline-none focus:ring-0 font-semibold text-sm ml-3" />
                     </div>
-                    <button className="flex items-center gap-2 bg-gray-50 px-6 py-3 rounded-2xl border border-gray-100 font-bold text-gray-500 hover:bg-emerald-50 hover:text-[#00B074] transition-all">
-                        <Filter size={18} /> Filters
+                    <button className="flex items-center gap-1.5 bg-gray-50 px-5 py-3 rounded-2xl border border-gray-100 font-bold text-xs text-gray-500 hover:text-[#F97316] transition-all cursor-pointer">
+                        <Filter size={14} /> Filters
                     </button>
                 </div>
 
                 {/* Users List */}
-                <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl shadow-gray-50 overflow-hidden">
+                <div className="bg-white rounded-[28px] border border-gray-100 shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
-                            <thead className="bg-[#2B3940] text-white">
+                            <thead className="bg-[#111827] text-white">
                                 <tr>
-                                    <th className="px-8 py-6 text-xs font-black uppercase tracking-widest">User Information</th>
-                                    <th className="px-8 py-6 text-xs font-black uppercase tracking-widest">Account Type</th>
-                                    <th className="px-8 py-6 text-xs font-black uppercase tracking-widest">Action</th>
+                                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest">User Information</th>
+                                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest">Account Type</th>
+                                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest">Action</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-50">
@@ -79,54 +79,54 @@ export default function ManageUsers() {
                                         initial={{ opacity: 0, scale: 0.98 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         transition={{ delay: idx * 0.05 }}
-                                        className="group hover:bg-emerald-50/30 transition-colors"
+                                        className="group hover:bg-orange-50/20 transition-colors"
                                     >
-                                        <td className="px-8 py-6">
-                                            <div className="flex items-center gap-5">
-                                                <div className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 group-hover:bg-white transition-colors shadow-sm">
-                                                    <UserCircle className="w-8 h-8" />
+                                        <td className="px-8 py-5">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 group-hover:bg-white transition-colors shadow-sm">
+                                                    <UserCircle className="w-7 h-7" />
                                                 </div>
                                                 <div>
-                                                    <h3 className="text-lg font-black text-gray-900 group-hover:text-[#00B074] transition-colors">{user.name}</h3>
-                                                    <p className="text-gray-400 font-bold text-sm lowercase flex items-center gap-1.5 mt-0.5">
+                                                    <h3 className="text-base font-bold text-gray-900 group-hover:text-[#F97316] transition-colors">{user.name}</h3>
+                                                    <p className="text-gray-400 font-semibold text-xs lowercase flex items-center gap-1.5 mt-0.5">
                                                         <Mail size={12} /> {user.email}
                                                     </p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-8 py-6">
-                                            <span className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest inline-flex items-center gap-2 border ${user.role === 'admin'
+                                        <td className="px-8 py-5">
+                                            <span className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest inline-flex items-center gap-2 border ${user.role === 'admin'
                                                 ? 'bg-blue-50 text-blue-600 border-blue-100'
-                                                : 'bg-emerald-50 text-emerald-600 border-emerald-100'
+                                                : 'bg-orange-50 text-[#F97316] border-orange-100'
                                                 }`}>
-                                                {user.role === 'admin' ? <Shield size={12} /> : <UserCheck size={12} />}
+                                                {user.role === 'admin' ? <Shield size={10} /> : <UserCheck size={10} />}
                                                 {user.role}
                                             </span>
                                             {user.role === 'employer' && user.is_verified === false && (
-                                                <span className="block mt-2 text-[10px] font-black uppercase tracking-widest text-orange-500 bg-orange-50 px-2 py-1 rounded inline-block">
-                                                    Pending Verification
+                                                <span className="block mt-2 text-[8px] font-black uppercase tracking-widest text-yellow-600 bg-yellow-50 px-2.5 py-1 rounded-full border border-yellow-100 inline-block">
+                                                    Pending Verify
                                                 </span>
                                             )}
                                             {user.role === 'employer' && user.is_verified !== false && (
-                                                <span className="block mt-2 text-[10px] font-black uppercase tracking-widest text-[#00B074] bg-emerald-50 px-2 py-1 rounded inline-block">
+                                                <span className="block mt-2 text-[8px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100 inline-block">
                                                     Verified
                                                 </span>
                                             )}
                                         </td>
-                                        <td className="px-8 py-6 flex items-center gap-3">
+                                        <td className="px-8 py-5 flex items-center gap-3">
                                             {user.role === 'employer' && user.is_verified === false && (
                                                 <button
                                                     onClick={() => verifyUser(user.id)}
-                                                    className="bg-emerald-50 text-[#00B074] hover:bg-[#00B074] hover:text-white px-4 py-4 rounded-2xl transition-all shadow-sm flex items-center gap-2 transform active:scale-95 font-black text-xs uppercase tracking-widest"
+                                                    className="bg-emerald-50 hover:bg-emerald-500 hover:text-white text-emerald-600 px-4 py-2 rounded-full transition-all shadow-sm flex items-center gap-1.5 cursor-pointer font-bold text-xs uppercase tracking-wider"
                                                 >
-                                                    <CheckCircle className="w-4 h-4" /> Verify
+                                                    <CheckCircle className="w-3.5 h-3.5" /> Verify
                                                 </button>
                                             )}
                                             <button
                                                 onClick={() => deleteUser(user.id)}
-                                                className="bg-red-50 text-red-500 hover:bg-red-500 hover:text-white p-4 rounded-2xl transition-all shadow-sm hover:shadow-lg hover:shadow-red-100 transform active:scale-95"
+                                                className="bg-red-50 text-red-500 hover:bg-red-500 hover:text-white p-2.5 rounded-full transition-all shadow-sm cursor-pointer"
                                             >
-                                                <Trash2 className="w-5 h-5" />
+                                                <Trash2 className="w-4 h-4" />
                                             </button>
                                         </td>
                                     </motion.tr>
@@ -136,9 +136,9 @@ export default function ManageUsers() {
                         {users.length === 0 && (
                             <div className="p-20 text-center flex flex-col items-center gap-4">
                                 <div className="p-6 bg-gray-50 rounded-full text-gray-300">
-                                    <Users size={48} />
+                                    <Users size={40} />
                                 </div>
-                                <h3 className="text-xl font-black text-gray-400">No users found in the system.</h3>
+                                <h3 className="text-lg font-bold text-gray-400">No users found in the system.</h3>
                             </div>
                         )}
                     </div>

@@ -6,7 +6,7 @@ import { Briefcase, User, Mail, Lock, ChevronDown, ArrowLeft, Building, MapPin, 
 
 export default function Signup() {
     const navigate = useNavigate()
-    const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'candidate' })
+    const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'candidate', contact_number: '' })
     const [loading, setLoading] = useState(false)
     const [showOTP, setShowOTP] = useState(false)
     const [otp, setOtp] = useState('')
@@ -16,13 +16,8 @@ export default function Signup() {
         setLoading(true)
         try {
             await axios.post('http://localhost:8000/api/auth/signup', formData)
-            if (formData.role === 'employer') {
-                setShowOTP(true)
-                alert("An OTP has been sent to your email for verification.")
-            } else {
-                alert("Success! Now you can log in.")
-                navigate('/login')
-            }
+            setShowOTP(true)
+            alert("An OTP has been sent to your email and phone number for verification.")
         } catch (err) {
             alert("Oops! " + (err.response?.data?.detail || "Something went wrong. Please try again."))
         } finally {
@@ -35,7 +30,7 @@ export default function Signup() {
         setLoading(true)
         try {
             await axios.post('http://localhost:8000/api/auth/verify-otp', { email: formData.email, otp })
-            alert("Success! Email verified. You can now log in.")
+            alert("Success! Account verified. You can now log in.")
             navigate('/login')
         } catch (err) {
             alert(err.response?.data?.detail || "Invalid or expired OTP")
@@ -55,60 +50,49 @@ export default function Signup() {
 
     return (
         <div className="min-h-screen w-full flex flex-col md:flex-row bg-[#F8F9FA] overflow-hidden relative">
-            {/* Floating Back Button */}
-            <Link
-                to="/"
-                className="absolute top-8 left-8 md:left-auto md:right-8 z-30 flex items-center gap-2 text-gray-500 hover:text-[#00B074] font-bold transition-all bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-sm border border-gray-100 group"
-            >
-                <motion.span
-                    initial={{ x: 0 }}
-                    whileHover={{ x: -4 }}
-                >
-                    <ArrowLeft size={20} />
-                </motion.span>
-                Back to Home
-            </Link>
 
-            {/* Left Side: Solid Green + Image + Bold Text */}
-            <div className="hidden md:flex md:w-5/12 bg-[#00B074] relative items-center justify-center p-16 text-white overflow-hidden">
-                {/* Background Image overlay */}
-                <div
-                    className="absolute inset-0 bg-cover bg-center opacity-40 scale-110"
-                    style={{ backgroundImage: `url(/hero-bg.png)` }}
-                />
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-[#00B074]/90 to-black/30"></div>
 
-                <div className="relative z-10 max-w-sm">
+            {/* Left Side: Premium Brand Experience */}
+            <div className="hidden md:flex md:w-5/12 bg-[#111827] relative items-center justify-center p-16 text-white overflow-hidden border-r border-gray-800">
+                {/* Visual mesh background grid */}
+                <div className="absolute inset-0 bg-[radial-gradient(#1f2937_1px,transparent_1px)] [background-size:24px_24px] opacity-40"></div>
+
+                {/* Rotating Concentric Circles */}
+                <div className="absolute w-[280px] h-[280px] border border-orange-500/10 rounded-full -z-5 animate-spin-slow"></div>
+                <div className="absolute w-[360px] h-[360px] border border-dashed border-gray-800 rounded-full -z-5"></div>
+                <div className="absolute w-[440px] h-[440px] border border-gray-800/30 rounded-full -z-5 border-dashed"></div>
+
+                {/* Glowing Core */}
+                <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-[#F97316]/5 rounded-full blur-3xl -z-5 animate-pulse"></div>
+
+                <div className="relative z-10 max-w-sm text-left">
                     <motion.div
-                        initial={{ opacity: 0, x: -50 }}
+                        initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 1 }}
+                        transition={{ duration: 0.8 }}
                     >
-                        <div className="w-16 h-1 bg-white mb-8 rounded-full"></div>
-                        <h1 className="text-7xl font-black leading-[1.1] mb-8 tracking-tighter">Start <br /> Today.</h1>
-                        <p className="text-xl font-medium opacity-80 leading-relaxed">
-                            Join thousands of users finding their dream jobs using our smart AI analysis.
+                        <div className="w-12 h-1.5 bg-[#F97316] mb-8 rounded-full"></div>
+                        <h1 className="text-6xl font-black leading-[1.1] mb-6 tracking-tighter font-display text-white">Start <br /> Today.</h1>
+                        <p className="text-gray-400 text-sm font-semibold leading-relaxed">
+                            Join thousands of users finding their dream tech jobs using our AI-driven competency analysis.
                         </p>
 
                         <div className="mt-16 space-y-4">
                             {[
-                                "AI Resume Scanner",
-                                "Instant Job Alerts",
-                                "Employer Direct Chat"
+                                "AI Resume Scanner & Score",
+                                "Targeted Gap Course Referral",
+                                "Employer Direct Verification"
                             ].map((item, i) => (
                                 <div key={i} className="flex items-center gap-3">
-                                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
-                                        <div className="w-2 h-2 rounded-full bg-white"></div>
+                                    <div className="w-5 h-5 rounded-full bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-[#F97316]"></div>
                                     </div>
-                                    <span className="font-bold opacity-90">{item}</span>
+                                    <span className="text-xs font-bold text-gray-300">{item}</span>
                                 </div>
                             ))}
                         </div>
                     </motion.div>
                 </div>
-
-                <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
             </div>
 
             {/* Right Side: Modern Form */}
@@ -119,8 +103,8 @@ export default function Signup() {
                     className="w-full max-w-xl"
                 >
                     <div className="mb-10 flex flex-col items-center md:items-start text-center md:text-left">
-                        <Link to="/" className="bg-emerald-50 p-3 rounded-xl mb-6 inline-block hover:scale-105 transition-transform">
-                            <h2 className="text-3xl font-black text-[#00B074]">Jobify</h2>
+                        <Link to="/" className="bg-orange-50 p-3 rounded-2xl mb-6 inline-block hover:scale-105 transition-transform border border-orange-100/50">
+                            <h2 className="text-3xl font-black text-[#F97316]">Road2Job</h2>
                         </Link>
                         <h2 className="text-3xl font-black text-gray-900 mb-2">Create Account</h2>
                         <p className="text-gray-500 font-bold text-lg">Quick and simple setup.</p>
@@ -132,12 +116,12 @@ export default function Signup() {
                                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
                                     <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Full Name</label>
                                     <div className="relative group">
-                                        <User className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#00B074] transition-colors" />
+                                        <User className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#F97316] transition-colors" />
                                         <input
                                             type="text"
                                             required
                                             placeholder="Your name"
-                                            className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00B074]/20 focus:border-[#00B074] focus:bg-white transition-all font-medium"
+                                            className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 focus:border-[#F97316] focus:bg-white transition-all font-medium"
                                             onChange={e => setFormData({ ...formData, name: e.target.value })}
                                         />
                                     </div>
@@ -146,31 +130,47 @@ export default function Signup() {
                                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
                                     <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Email Address</label>
                                     <div className="relative group">
-                                        <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#00B074] transition-colors" />
+                                        <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#F97316] transition-colors" />
                                         <input
                                             type="email"
                                             required
                                             placeholder="name@email.com"
-                                            className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00B074]/20 focus:border-[#00B074] focus:bg-white transition-all font-medium"
+                                            className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 focus:border-[#F97316] focus:bg-white transition-all font-medium"
                                             onChange={e => setFormData({ ...formData, email: e.target.value })}
                                         />
                                     </div>
                                 </motion.div>
                             </div>
 
-                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Set Password</label>
-                                <div className="relative group">
-                                    <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#00B074] transition-colors" />
-                                    <input
-                                        type="password"
-                                        required
-                                        placeholder="Min. 6 characters"
-                                        className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00B074]/20 focus:border-[#00B074] focus:bg-white transition-all font-medium"
-                                        onChange={e => setFormData({ ...formData, password: e.target.value })}
-                                    />
-                                </div>
-                            </motion.div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+                                    <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Set Password</label>
+                                    <div className="relative group">
+                                        <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#F97316] transition-colors" />
+                                        <input
+                                            type="password"
+                                            required
+                                            placeholder="Min. 6 characters"
+                                            className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 focus:border-[#F97316] focus:bg-white transition-all font-medium"
+                                            onChange={e => setFormData({ ...formData, password: e.target.value })}
+                                        />
+                                    </div>
+                                </motion.div>
+
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+                                    <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Contact Number</label>
+                                    <div className="relative group">
+                                        <Phone className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#F97316] transition-colors" />
+                                        <input
+                                            type="text"
+                                            required
+                                            placeholder="Phone Number"
+                                            className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 focus:border-[#F97316] focus:bg-white transition-all font-medium"
+                                            onChange={e => setFormData({ ...formData, contact_number: e.target.value })}
+                                        />
+                                    </div>
+                                </motion.div>
+                            </div>
 
                             <AnimatePresence>
                                 {formData.role === 'employer' && (
@@ -184,41 +184,28 @@ export default function Signup() {
                                             <div>
                                                 <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Organization Name</label>
                                                 <div className="relative group">
-                                                    <Building className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#00B074] transition-colors" />
+                                                    <Building className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#F97316] transition-colors" />
                                                     <input
                                                         type="text"
                                                         required
                                                         placeholder="e.g. Google, Microsoft, TCS"
-                                                        className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00B074]/20 focus:border-[#00B074] focus:bg-white transition-all font-medium"
+                                                        className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 focus:border-[#F97316] focus:bg-white transition-all font-medium"
                                                         onChange={e => setFormData({ ...formData, organization_name: e.target.value })}
                                                     />
                                                 </div>
                                             </div>
                                             <div>
-                                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Contact Number</label>
+                                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Company Address</label>
                                                 <div className="relative group">
-                                                    <Phone className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#00B074] transition-colors" />
+                                                    <MapPin className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#F97316] transition-colors" />
                                                     <input
                                                         type="text"
                                                         required
-                                                        placeholder="Phone Number"
-                                                        className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00B074]/20 focus:border-[#00B074] focus:bg-white transition-all font-medium"
-                                                        onChange={e => setFormData({ ...formData, contact_number: e.target.value })}
+                                                        placeholder="Street, City, Country"
+                                                        className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 focus:border-[#F97316] focus:bg-white transition-all font-medium"
+                                                        onChange={e => setFormData({ ...formData, address: e.target.value })}
                                                     />
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Company Address</label>
-                                            <div className="relative group">
-                                                <MapPin className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#00B074] transition-colors" />
-                                                <input
-                                                    type="text"
-                                                    required
-                                                    placeholder="Street, City, Country"
-                                                    className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00B074]/20 focus:border-[#00B074] focus:bg-white transition-all font-medium"
-                                                    onChange={e => setFormData({ ...formData, address: e.target.value })}
-                                                />
                                             </div>
                                         </div>
                                     </motion.div>
@@ -229,7 +216,7 @@ export default function Signup() {
                                 <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Account Type</label>
                                 <div className="relative mt-2">
                                     <select
-                                        className="w-full pl-6 pr-10 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00B074]/20 focus:border-[#00B074] focus:bg-white transition-all font-bold text-gray-700 appearance-none cursor-pointer"
+                                        className="w-full pl-6 pr-10 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 focus:border-[#F97316] focus:bg-white transition-all font-bold text-gray-700 appearance-none cursor-pointer"
                                         onChange={e => setFormData({ ...formData, role: e.target.value })}
                                     >
                                         <option value="candidate">I want a job</option>
@@ -247,7 +234,7 @@ export default function Signup() {
                                 whileTap={{ scale: 0.99 }}
                                 type="submit"
                                 disabled={loading}
-                                className="w-full py-5 bg-[#00B074] text-white rounded-2xl font-black text-lg hover:bg-[#009663] transition-all shadow-xl shadow-emerald-200 disabled:opacity-70 mt-6 relative overflow-hidden group"
+                                className="w-full py-5 bg-[#F97316] text-white rounded-2xl font-black text-lg hover:bg-[#EA580C] transition-all shadow-xl shadow-orange-100 disabled:opacity-70 mt-6 relative overflow-hidden group cursor-pointer"
                             >
                                 <span className="relative z-10">{loading ? "Joining..." : "Join Now"}</span>
                                 <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-[-30deg]"></div>
@@ -260,11 +247,11 @@ export default function Signup() {
                             className="space-y-8"
                         >
                             <div className="text-center">
-                                <div className="w-20 h-20 bg-emerald-50 rounded-3xl flex items-center justify-center text-[#00B074] mx-auto mb-6 shadow-sm">
+                                <div className="w-20 h-20 bg-orange-50 rounded-3xl flex items-center justify-center text-[#F97316] mx-auto mb-6 shadow-sm border border-orange-100/50">
                                     <Mail size={40} />
                                 </div>
-                                <h2 className="text-3xl font-black text-gray-900 mb-2">Verify Email</h2>
-                                <p className="text-gray-500 font-bold">We've sent a 6-digit code to <br /><span className="text-[#00B074]">{formData.email}</span></p>
+                                <h2 className="text-3xl font-black text-gray-900 mb-2">Verify Details</h2>
+                                <p className="text-gray-500 font-bold">We've sent a 6-digit verification code to <br /><span className="text-[#F97316]">{formData.email}</span> and your mobile.</p>
                             </div>
 
                             <form onSubmit={handleVerifyOTP} className="space-y-6">
@@ -274,7 +261,7 @@ export default function Signup() {
                                         maxLength="6"
                                         required
                                         placeholder="······"
-                                        className="w-full max-w-[280px] text-center text-4xl tracking-[1.5rem] font-black py-6 bg-gray-50 border border-gray-100 rounded-3xl focus:outline-none focus:ring-2 focus:ring-[#00B074]/20 focus:border-[#00B074] focus:bg-white transition-all text-gray-800 placeholder:text-gray-200"
+                                        className="w-full max-w-[280px] text-center text-4xl tracking-[1.5rem] font-black py-6 bg-gray-50 border border-gray-100 rounded-3xl focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 focus:border-[#F97316] focus:bg-white transition-all text-gray-800 placeholder:text-gray-200"
                                         value={otp}
                                         onChange={e => setOtp(e.target.value.replace(/\D/g, ''))}
                                     />
@@ -285,7 +272,7 @@ export default function Signup() {
                                     whileTap={{ scale: 0.99 }}
                                     type="submit"
                                     disabled={loading || otp.length < 6}
-                                    className="w-full py-5 bg-[#00B074] text-white rounded-2xl font-black text-lg hover:bg-[#009663] transition-all shadow-xl shadow-emerald-200 disabled:opacity-50"
+                                    className="w-full py-5 bg-[#F97316] text-white rounded-2xl font-black text-lg hover:bg-[#EA580C] transition-all shadow-xl shadow-orange-100 disabled:opacity-50 cursor-pointer"
                                 >
                                     {loading ? "Verifying..." : "Verify & Continue"}
                                 </motion.button>
@@ -294,7 +281,7 @@ export default function Signup() {
                                     <button
                                         type="button"
                                         onClick={handleResendOTP}
-                                        className="text-gray-400 hover:text-[#00B074] font-bold transition-colors"
+                                        className="text-gray-400 hover:text-[#F97316] font-bold transition-colors cursor-pointer"
                                     >
                                         Didn't receive the code? Resend
                                     </button>
@@ -303,7 +290,7 @@ export default function Signup() {
                                 <button
                                     type="button"
                                     onClick={() => setShowOTP(false)}
-                                    className="w-full text-center text-gray-400 font-bold hover:underline"
+                                    className="w-full text-center text-gray-400 font-bold hover:underline cursor-pointer"
                                 >
                                     Back to Registration
                                 </button>
@@ -312,7 +299,7 @@ export default function Signup() {
                     )}
 
                     <p className="mt-8 text-center text-gray-400 font-bold">
-                        Already have an account? <Link to="/login" className="text-[#00B074] ml-1 hover:underline underline-offset-4">Log in</Link>
+                        Already have an account? <Link to="/login" className="text-[#F97316] ml-1 hover:underline underline-offset-4">Log in</Link>
                     </p>
                 </motion.div>
             </div>

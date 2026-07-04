@@ -88,39 +88,39 @@ export default function FindJobs() {
     }, [userId])
 
     return (
-        <div className="flex flex-col min-h-screen bg-[#F1F8F5]">
+        <div className="flex flex-col min-h-screen bg-[#F8F9FA]">
             {/* Page Header with Search */}
-            <div className="bg-[#2B3940] pt-40 pb-32 text-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[#00B074]/10 mix-blend-overlay opacity-50"></div>
+            <div className="bg-[#111827] pt-36 pb-24 text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-[#F97316]/5 mix-blend-overlay opacity-40"></div>
                 <div className="max-w-[1320px] mx-auto px-6 relative z-10">
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="text-5xl md:text-6xl font-black text-white mb-10"
+                        className="text-5xl md:text-6xl font-extrabold text-white mb-10 tracking-tight"
                     >
-                        Find Your <span className="text-[#00B074]">Career</span>
+                        Find Your <span className="text-[#F97316]">Career</span>
                     </motion.h1>
 
                     {/* Integrated Search Bar */}
-                    <div className="max-w-4xl mx-auto bg-white p-3 rounded-2xl shadow-2xl flex flex-wrap md:flex-nowrap gap-3">
-                        <div className="flex-grow flex items-center bg-gray-50 rounded-xl px-5 border border-gray-100 group focus-within:ring-2 focus-within:ring-[#00B074]">
-                            <Search className="text-gray-400 group-focus-within:text-[#00B074] transition-colors" />
+                    <div className="max-w-4xl mx-auto bg-white/95 backdrop-blur-xl p-3 rounded-[24px] shadow-2xl border border-gray-100/50 flex flex-col md:flex-row gap-3">
+                        <div className="flex-grow flex items-center bg-gray-50 rounded-[18px] px-5 border border-gray-100 group focus-within:border-[#F97316] transition-colors">
+                            <Search className="text-gray-400 group-focus-within:text-[#F97316] transition-colors shrink-0" size={20} />
                             <input
                                 type="text"
-                                placeholder="Job title, keywords, company..."
-                                className="w-full py-5 bg-transparent border-0 focus:ring-0 text-gray-800 font-medium"
+                                placeholder="Job title, technology, or company..."
+                                className="w-full py-4 bg-transparent border-0 focus:outline-none focus:ring-0 text-gray-800 font-semibold text-sm placeholder:text-gray-400 pl-3"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
-                        <div className="hidden md:flex flex-grow items-center bg-gray-50 rounded-xl px-5 border border-gray-100 group focus-within:ring-2 focus-within:ring-[#00B074]">
-                            <MapPin className="text-gray-400 group-focus-within:text-[#00B074] transition-colors" />
+                        <div className="hidden md:flex flex-grow items-center bg-gray-50 rounded-[18px] px-5 border border-gray-100 group focus-within:border-[#F97316] transition-colors">
+                            <MapPin className="text-gray-400 group-focus-within:text-[#F97316] transition-colors shrink-0" size={18} />
                             <select
-                                className="w-full py-5 bg-transparent border-0 focus:ring-0 text-gray-500 font-medium cursor-pointer"
+                                className="w-full py-4 bg-transparent border-0 focus:outline-none focus:ring-0 text-gray-500 font-semibold text-sm cursor-pointer pl-2"
                                 value={selectedLocation}
                                 onChange={(e) => setSelectedLocation(e.target.value)}
                             >
-                                <option value="">Location</option>
+                                <option value="">Select Location</option>
                                 <option value="Remote">Remote</option>
                                 <option value="Mumbai">Mumbai</option>
                                 <option value="Pune">Pune</option>
@@ -129,10 +129,9 @@ export default function FindJobs() {
                             </select>
                         </div>
                         <button
-                            className="bg-[#00B074] text-white px-10 py-5 rounded-xl font-black uppercase tracking-wider hover:bg-[#009663] transition-all shadow-xl shadow-emerald-400/20"
-                            onClick={() => { /* search is live/reactive */ }}
+                            className="bg-[#F97316] text-white px-10 py-4 rounded-[18px] font-bold hover:bg-[#EA580C] hover:shadow-lg hover:shadow-orange-500/10 transition-all duration-300 cursor-pointer"
                         >
-                            Search
+                            Find Jobs
                         </button>
                     </div>
                 </div>
@@ -142,23 +141,23 @@ export default function FindJobs() {
             <section className="py-24 max-w-[1320px] mx-auto px-6 w-full grid lg:grid-cols-4 gap-12">
                 {/* Filters Sidebar */}
                 <div className="hidden lg:flex flex-col gap-10">
-                    <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm flex flex-col gap-8">
+                    <div className="bg-white p-8 rounded-[28px] border border-gray-100 shadow-sm flex flex-col gap-8">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-xl font-black text-[#2B3940]">Filters</h3>
-                            <Filter size={18} className="text-[#00B074]" />
+                            <h3 className="text-lg font-bold text-gray-900 tracking-tight">Filters</h3>
+                            <Filter size={18} className="text-[#F97316]" />
                         </div>
 
                         {/* Filter Group: Job Type */}
                         <div className="flex flex-col gap-4">
-                            <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest">Job Type</h4>
+                            <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Job Type</h4>
                             <div className="flex flex-wrap gap-2">
                                 {["Full Time", "Part Time", "Internship", "Contract"].map((type) => (
                                     <button
                                         key={type}
                                         onClick={() => toggleFilter(type)}
-                                        className={`px-5 py-2.5 rounded-full text-xs font-black transition-all border uppercase tracking-wider ${filterTypes.includes(type)
-                                                ? 'bg-[#00B074] text-white border-[#00B074] shadow-lg shadow-emerald-100'
-                                                : 'bg-white text-gray-400 border-gray-100 hover:border-[#00B074] hover:text-[#00B074]'
+                                        className={`px-4 py-2.5 rounded-full text-xs font-bold transition-all border tracking-wide cursor-pointer ${filterTypes.includes(type)
+                                                ? 'bg-[#F97316] text-white border-[#F97316] shadow-md shadow-orange-500/10'
+                                                : 'bg-white text-gray-400 border-gray-200 hover:border-[#F97316] hover:text-[#F97316]'
                                             }`}
                                     >
                                         {type}
@@ -169,14 +168,14 @@ export default function FindJobs() {
 
                         {/* Filter Group: Salary Range */}
                         <div className="flex flex-col gap-4">
-                            <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest">Salary Range (Max: ₹{salaryMax}L)</h4>
+                            <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Salary Max: (₹{salaryMax}L)</h4>
                             <input
                                 type="range"
                                 min={1}
                                 max={50}
                                 value={salaryMax}
                                 onChange={e => setSalaryMax(Number(e.target.value))}
-                                className="w-full accent-[#00B074]"
+                                className="w-full accent-[#F97316]"
                             />
                             <div className="flex justify-between text-xs font-bold text-gray-400">
                                 <span>₹1L</span>
@@ -186,9 +185,9 @@ export default function FindJobs() {
                             {salaryMax < 50 && (
                                 <button
                                     onClick={() => setSalaryMax(50)}
-                                    className="text-xs font-bold text-[#00B074] hover:underline text-left"
+                                    className="text-xs font-bold text-[#F97316] hover:underline text-left cursor-pointer"
                                 >
-                                    Clear salary filter
+                                    Clear salary limit
                                 </button>
                             )}
                         </div>
@@ -198,88 +197,91 @@ export default function FindJobs() {
                 {/* Job Listings Area */}
                 <div className="lg:col-span-3 flex flex-col gap-6">
                     <div className="flex items-center justify-between mb-4">
-                        <p className="text-gray-500 font-bold">Showing <span className="text-[#00B074]">{filteredJobs.length}</span> of <span className="text-gray-700">{jobs.length}</span> jobs</p>
-                        <select className="bg-transparent border-0 font-bold text-[#2B3940] focus:ring-0 cursor-pointer">
+                        <p className="text-gray-500 font-semibold text-sm">Showing <span className="text-[#F97316]">{filteredJobs.length}</span> of <span className="text-gray-700">{jobs.length}</span> positions</p>
+                        <select className="bg-transparent border-0 font-bold text-gray-800 focus:ring-0 cursor-pointer">
                             <option>Latest Updates</option>
                             <option>Salary: High to Low</option>
                         </select>
                     </div>
 
                     {filteredJobs.length === 0 ? (
-                        <div className="bg-white p-20 rounded-[3rem] text-center border border-dashed border-gray-200">
-                            <p className="text-xl font-black text-gray-400">No jobs found matching your filters.</p>
+                        <div className="bg-white p-20 rounded-[32px] text-center border border-dashed border-gray-200">
+                            <p className="text-lg font-bold text-gray-400">No postings match your filtering.</p>
                             <button
                                 onClick={() => { setSearchTerm(''); setFilterTypes([]); setSalaryMax(50); setSelectedLocation('') }}
-                                className="mt-4 text-[#00B074] font-bold hover:underline"
+                                className="mt-4 text-[#F97316] font-bold hover:underline cursor-pointer"
                             >
-                                Clear all filters
+                                Clear all active filters
                             </button>
                         </div>
                     ) : filteredJobs.map((job, i) => (
                         <motion.div
                             key={i}
-                            className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm flex flex-col md:flex-row items-center gap-6 hover:shadow-xl hover:border-[#00B074]/20 transition-all group"
-                            initial={{ opacity: 0, y: 30 }}
+                            className="p-6 bg-white border border-gray-100 rounded-3xl flex flex-col md:flex-row items-center gap-6 transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-gray-100/50 hover:border-orange-200"
+                            initial={{ opacity: 0, y: 15 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.05 }}
+                            transition={{ duration: 0.3 }}
+                            viewport={{ once: true }}
                         >
                             {/* Company Logo / Initial */}
-                            <div className="w-24 h-24 bg-gray-50 border border-gray-100 rounded-3xl flex items-center justify-center p-5 shrink-0 group-hover:bg-emerald-50 transition-all font-black text-3xl text-[#00B074]">
-                                {job.company_name ? job.company_name.charAt(0).toUpperCase() : 'J'}
+                            <div className="w-20 h-20 bg-orange-50 border border-gray-100 rounded-2xl flex items-center justify-center p-3 shrink-0 font-black text-2xl text-[#F97316]">
+                                {job.company_name ? job.company_name.charAt(0).toUpperCase() : 'R'}
                             </div>
-                            <div className="flex-grow text-center md:text-left">
-                                <h3 className="text-2xl font-black text-[#2B3940] transition-colors group-hover:text-[#00B074]">{job.title}</h3>
-                                {/* Full company name visible */}
-                                <p className="text-sm font-bold text-[#00B074] mt-1">{job.company_name || 'Company'}</p>
-                                <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-3 text-sm font-bold text-gray-400">
-                                    <span className="flex items-center gap-1.5"><MapPin size={16} className="text-[#00B074]" /> {job.location || 'Remote'}</span>
-                                    <span className="flex items-center gap-1.5"><Briefcase size={16} className="text-[#00B074]" /> {job.job_type || 'Full Time'}</span>
-                                    <span className="flex items-center gap-1.5"><TrendingUp size={16} className="text-[#00B074]" /> {job.salary || job.salary_range || 'Not Disclosed'}</span>
+
+                            <div className="flex-grow">
+                                <h3 className="text-xl font-bold text-gray-900 tracking-tight">{job.title}</h3>
+                                <p className="text-sm font-semibold text-[#F97316] mt-0.5">{job.company_name || 'Organization'}</p>
+                                <div className="flex flex-wrap gap-x-5 gap-y-1.5 mt-3 text-xs font-semibold text-gray-500">
+                                    <span className="flex items-center gap-1.5"><MapPin size={14} className="text-gray-400" /> {job.location || 'Remote'}</span>
+                                    <span className="flex items-center gap-1.5"><Briefcase size={14} className="text-gray-400" /> {job.job_type || 'Full Time'}</span>
+                                    <span className="flex items-center gap-1.5"><TrendingUp size={14} className="text-gray-400" /> {job.salary || job.salary_range || 'Not Disclosed'}</span>
                                 </div>
+                                
                                 <div className="flex items-center gap-2 mt-4 group/id">
-                                    <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100 transition-all group-hover:bg-white text-[10px] font-bold text-gray-500">
-                                        <span className="text-gray-300 uppercase tracking-tighter mr-1">Job ID:</span>
-                                        <code className="text-gray-700 font-mono">{job.job_id}</code>
+                                    <div className="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-lg border border-gray-100 transition-all text-[10px] font-bold text-gray-400">
+                                        <span className="text-gray-300 uppercase tracking-tighter">Job ID:</span>
+                                        <code className="text-gray-600 font-mono">{job.job_id}</code>
                                     </div>
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             copyToClipboard(job.job_id);
                                         }}
-                                        className="text-gray-300 hover:text-[#00B074] transition-colors p-1"
+                                        className="text-gray-300 hover:text-[#F97316] transition-colors p-1 cursor-pointer"
                                         title="Copy Job ID"
                                     >
-                                        {copiedId === job.job_id ? <Check size={14} className="text-[#00B074]" /> : <Copy size={14} />}
+                                        {copiedId === job.job_id ? <Check size={12} className="text-[#F97316]" /> : <Copy size={12} />}
                                     </button>
                                 </div>
                             </div>
-                            <div className="flex flex-col md:items-end gap-3 text-right shrink-0">
-                                <div className="flex gap-3 flex-wrap justify-center md:justify-end">
+
+                            <div className="flex flex-col md:items-end gap-3 text-right shrink-0 w-full md:w-auto">
+                                <div className="flex gap-2.5 flex-wrap justify-center md:justify-end w-full">
                                     <Link 
                                         to={`/jobs/${job.job_id}`} 
-                                        className="bg-white text-[#00B074] border border-[#00B074] py-4 px-8 rounded-2xl font-black text-lg hover:bg-[#00B074] hover:text-white transition-all shadow-sm flex items-center justify-center"
+                                        className="btn-secondary-job py-3.5 px-6 text-sm text-center flex-grow md:flex-grow-0"
                                     >
-                                        View More
+                                        View Details
                                     </Link>
+                                    
                                     {appliedJobs.includes(job.job_id) ? (
-                                        <button disabled className="bg-gray-100 text-gray-400 py-4 px-8 rounded-2xl font-black text-lg border border-gray-200 cursor-not-allowed flex items-center justify-center gap-2">
-                                            Already Applied <CheckCircle size={20} />
+                                        <button disabled className="bg-gray-100 text-gray-400 py-3.5 px-6 rounded-full font-bold text-sm border border-gray-200 cursor-not-allowed flex items-center justify-center gap-2 flex-grow md:flex-grow-0">
+                                            Applied <CheckCircle size={16} />
                                         </button>
                                     ) : (
                                         <Link 
                                             to={userId ? `/jobs/${job.job_id}` : '/login'} 
-                                            className="bg-[#00B074] text-white py-4 px-8 rounded-2xl font-black text-lg hover:bg-[#009663] transition-all shadow-xl shadow-emerald-400/20 flex items-center justify-center"
+                                            className="btn-primary-job py-3.5 px-6 text-sm text-center shadow-none flex-grow md:flex-grow-0"
                                         >
                                             Apply Now
                                         </Link>
                                     )}
-                                    {/* Wishlist button */}
+                                    
                                     <button
                                         onClick={() => toggleWishlist(job.job_id)}
-                                        className={`p-4 rounded-2xl transition-all shadow-sm ${wishlist.includes(job.job_id) ? 'bg-[#00B074] text-white' : 'bg-gray-50 text-[#00B074] hover:bg-[#00B074] hover:text-white'}`}
-                                        title={wishlist.includes(job.job_id) ? "Remove from Wishlist" : "Save to Wishlist"}
+                                        className={`p-3.5 rounded-full transition-all border shadow-sm cursor-pointer ${wishlist.includes(job.job_id) ? 'bg-[#F97316] border-[#F97316] text-white' : 'bg-white border-gray-200 text-gray-400 hover:border-[#F97316] hover:text-[#F97316]'}`}
                                     >
-                                        <Heart size={22} fill={wishlist.includes(job.job_id) ? "currentColor" : "none"} />
+                                        <Heart size={16} fill={wishlist.includes(job.job_id) ? "currentColor" : "none"} />
                                     </button>
                                 </div>
                             </div>

@@ -75,31 +75,50 @@ export default function Recommendations() {
     return (
         <DashboardLayout role="candidate" userName={userName}>
             <div className="flex flex-col gap-8">
-                {/* Header */}
-                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight">Best Jobs <span className="text-[#00B074]">for Me</span></h2>
-                    <p className="text-gray-500 font-bold mt-1">AI matched these career goals based on your skills.</p>
+                {/* Header Banner */}
+                <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="relative p-10 bg-[#111827] rounded-[32px] text-white overflow-hidden shadow-xl text-left"
+                >
+                    {/* Concentric rotating circles in banner */}
+                    <div className="absolute top-1/2 -right-10 -translate-y-1/2 w-[200px] h-[200px] border border-orange-500/10 rounded-full pointer-events-none animate-spin-slow -z-5"></div>
+                    <div className="absolute top-1/2 -right-10 -translate-y-1/2 w-[260px] h-[260px] border border-dashed border-gray-800 rounded-full pointer-events-none -z-5"></div>
+                    <div className="absolute top-10 right-1/4 w-40 h-40 bg-[#F97316]/5 rounded-full blur-2xl pointer-events-none -z-5"></div>
+
+                    <div className="relative z-10">
+                        <span className="flex items-center gap-2 text-[#F97316] font-bold text-xs uppercase tracking-widest mb-4">
+                            <Target className="w-4 h-4 animate-pulse" />
+                            AI Recommendation Feed
+                        </span>
+                        <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-3 text-white font-display">
+                            Best Jobs <span className="text-[#F97316]">for Me</span>
+                        </h2>
+                        <p className="text-gray-405 text-xs sm:text-sm font-semibold max-w-xl">
+                            AI matched these career goals based on your skills profile and qualification matrix.
+                        </p>
+                    </div>
                 </motion.div>
 
                 {loading ? (
-                    <div className="flex flex-col items-center justify-center py-32 gap-6 bg-white rounded-[3rem] border border-gray-100 shadow-sm">
-                        <div className="w-16 h-16 border-8 border-emerald-50 border-t-[#00B074] rounded-full animate-spin"></div>
-                        <p className="text-xl font-black text-gray-400 uppercase tracking-widest">Finding matches...</p>
+                    <div className="flex flex-col items-center justify-center py-32 gap-6 bg-white rounded-[32px] border border-gray-100 shadow-sm">
+                        <div className="w-14 h-14 border-4 border-orange-50 border-t-[#F97316] rounded-full animate-spin"></div>
+                        <p className="text-xs font-black uppercase tracking-widest text-gray-400">Finding matches...</p>
                     </div>
                 ) : jobs.length === 0 ? (
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
+                        initial={{ opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-white rounded-[3rem] p-20 text-center border border-gray-100 shadow-xl shadow-green-50"
+                        className="bg-white rounded-[32px] p-20 text-center border border-gray-100 shadow-sm"
                     >
-                        <div className="bg-emerald-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
-                            <Sparkles size={48} className="text-[#00B074]" />
+                        <div className="bg-orange-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner text-[#F97316]">
+                            <Sparkles size={40} />
                         </div>
-                        <h3 className="text-2xl font-black text-gray-900 mb-4">No jobs matched yet.</h3>
-                        <p className="text-gray-500 mb-10 text-lg font-bold max-w-md mx-auto leading-relaxed">Please make sure you have added your resume so our AI can read your skills first.</p>
-                        <Link to="/candidate/resume-upload" className="inline-flex items-center gap-3 px-10 py-5 bg-[#00B074] text-white rounded-[2rem] font-black text-xl hover:bg-[#009663] transition-all shadow-2xl shadow-emerald-200">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-4 tracking-tight">No jobs matched yet.</h3>
+                        <p className="text-gray-400 mb-10 text-sm font-semibold max-w-md mx-auto leading-relaxed">Please make sure you have added your resume so our AI can read your skills first.</p>
+                        <Link to="/candidate/resume-upload" className="inline-flex items-center gap-2 px-8 py-4 bg-[#F97316] text-white rounded-full font-bold text-sm hover:bg-[#EA580C] transition-all shadow-md shadow-orange-500/10">
                             Add My Resume
-                            <ArrowRight size={24} />
+                            <ArrowRight size={16} />
                         </Link>
                     </motion.div>
                 ) : (
@@ -107,100 +126,102 @@ export default function Recommendations() {
                         {jobs.map((job, idx) => (
                             <motion.div
                                 key={idx}
-                                initial={{ opacity: 0, y: 30 }}
+                                initial={{ opacity: 0, y: 15 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: idx * 0.1 }}
-                                whileHover={{ y: -10 }}
-                                className="bg-white rounded-[2.5rem] border border-gray-100 p-8 pt-12 relative group shadow-sm hover:shadow-2xl hover:border-[#00B074]/30 transition-all flex flex-col h-full"
+                                transition={{ delay: idx * 0.05 }}
+                                whileHover={{ y: -6 }}
+                                className="bg-white rounded-[32px] border border-gray-100 p-8 pt-12 relative group shadow-sm hover:shadow-xl hover:border-orange-200/50 transition-all flex flex-col h-full text-left"
                             >
-                                <div className="absolute top-0 right-0 py-2.5 px-6 bg-[#00B074] text-white text-[10px] font-black uppercase tracking-widest rounded-bl-[1.5rem] rounded-tr-[2.5rem] shadow-xl shadow-emerald-100 flex items-center gap-2">
-                                    <Sparkles size={14} />
-                                    {job.match_percentage}% Score
+                                <div className="absolute top-0 right-0 py-2 px-5 bg-gradient-to-r from-[#F97316] to-[#FDBA74] text-white text-[9px] font-black uppercase tracking-widest rounded-bl-2xl rounded-tr-[32px] shadow-sm flex items-center gap-1.5">
+                                    <Sparkles size={11} />
+                                    {job.match_percentage}% Match
                                 </div>
 
-                                <div className="bg-gray-50 w-20 h-20 rounded-[1.5rem] flex items-center justify-center mb-6 group-hover:bg-[#00B074]/10 group-hover:text-[#00B074] text-[#00B074]/40 transition-all shadow-sm">
-                                    <Briefcase size={36} />
+                                <div className="bg-orange-50/50 w-14 h-14 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#F97316]/10 text-[#F97316] transition-colors shadow-sm shrink-0">
+                                    <Briefcase size={24} />
                                 </div>
 
-                                <div className="flex-grow">
-                                    <h3 className="text-2xl font-black text-gray-900 mb-2 truncate group-hover:text-[#00B074] transition-colors">{job.title}</h3>
-                                    <p className="text-gray-400 mb-4 flex items-center font-black uppercase tracking-widest text-[10px]">
-                                        {job.company_name}
+                                <div className="flex-grow flex flex-col">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-1 tracking-tight truncate group-hover:text-[#F97316] transition-colors leading-snug">
+                                        {job.title ? job.title.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : 'Position'}
+                                    </h3>
+                                    <p className="text-[#F97316] mb-4 font-black uppercase tracking-widest text-[9px]">
+                                        {job.company_name ? job.company_name.toUpperCase() : 'ORGANIZATION'}
                                     </p>
 
-                                    <div className="flex items-center gap-2 mb-8 group/id">
-                                        <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100 transition-all group-hover:bg-white text-[10px] font-bold text-gray-500">
-                                            <span className="text-gray-300 uppercase tracking-tighter mr-1">Job ID:</span>
-                                            <code className="text-gray-700 font-mono">{job.job_id}</code>
+                                    <div className="flex items-center gap-2 mb-5">
+                                        <div className="flex items-center gap-1 bg-gray-50 px-2.5 py-1 rounded-lg border border-gray-100/50 text-[9px] font-bold text-gray-400">
+                                            <span className="text-gray-300 uppercase tracking-tighter">Job ID:</span>
+                                            <code className="text-gray-600 font-mono font-medium">{job.job_id}</code>
                                         </div>
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 copyToClipboard(job.job_id);
                                             }}
-                                            className="text-gray-300 hover:text-[#00B074] transition-colors p-1"
+                                            className="text-gray-300 hover:text-[#F97316] transition-colors p-1 cursor-pointer"
                                             title="Copy Job ID"
                                         >
-                                            {copiedId === job.job_id ? <Check size={14} className="text-[#00B074]" /> : <Copy size={14} />}
+                                            {copiedId === job.job_id ? <Check size={11} className="text-[#F97316]" /> : <Copy size={11} />}
                                         </button>
                                     </div>
 
-                                    <div className="flex flex-col gap-3 mb-8">
-                                        <div className="flex items-center text-gray-400 font-bold text-xs bg-gray-50 px-5 py-3 rounded-2xl group-hover:bg-white border border-transparent group-hover:border-gray-100 transition-all">
-                                            <MapPin size={16} className="mr-3 text-[#00B074]" /> {job.location || 'Remote'}
-                                        </div>
-                                        <div className="flex items-center text-gray-400 font-bold text-xs bg-gray-50 px-5 py-3 rounded-2xl group-hover:bg-white border border-transparent group-hover:border-gray-100 transition-all">
-                                            <IndianRupee size={16} className="mr-3 text-[#00B074]" /> {job.salary || 'Not disclosed'}
-                                        </div>
+                                    {/* Clean metadata icons & details (Not looking like text input fields) */}
+                                    <div className="flex flex-wrap gap-x-5 gap-y-2 mb-6 text-xs font-semibold text-gray-500">
+                                        <span className="flex items-center gap-1.5">
+                                            <MapPin size={14} className="text-gray-400" />
+                                            {job.location ? job.location.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : 'Remote'}
+                                        </span>
+                                        <span className="flex items-center gap-1.5">
+                                            <IndianRupee size={14} className="text-gray-400" />
+                                            {job.salary || 'Not Disclosed'}
+                                        </span>
                                     </div>
 
-                                    <div className="mb-10 flex flex-wrap gap-2">
+                                    <div className="mb-6 flex flex-wrap gap-1.5">
                                         {job.required_skills?.slice(0, 3).map((s, i) => (
-                                            <span key={i} className="bg-emerald-50/50 text-[#00B074] text-[10px] px-4 py-2 rounded-xl font-black border border-emerald-100/50 uppercase tracking-widest">{s}</span>
+                                            <span key={i} className="bg-orange-50/50 text-[#F97316] text-[9px] px-3.5 py-1.5 rounded-xl font-bold border border-orange-100/30 uppercase tracking-wider">{s}</span>
                                         ))}
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col gap-3 w-full mt-auto">
+                                {/* Refined Actions: wishlist, details and apply in single row */}
+                                <div className="flex items-center gap-3.5 w-full mt-auto">
+                                    <button 
+                                        onClick={() => toggleWishlist(job.job_id)}
+                                        className={`p-3.5 rounded-2xl transition-all border shadow-sm cursor-pointer shrink-0 ${
+                                            wishlist.includes(job.job_id) 
+                                                ? 'bg-[#F97316] border-[#F97316] text-white shadow-sm' 
+                                                : 'bg-white border-gray-150 text-gray-400 hover:border-[#F97316] hover:text-[#F97316]'
+                                        }`}
+                                    >
+                                        <Heart size={15} fill={wishlist.includes(job.job_id) ? "currentColor" : "none"} />
+                                    </button>
+
                                     <Link 
                                         to={`/jobs/${job.job_id}`} 
-                                        className="w-full bg-white text-[#00B074] border border-[#00B074] py-3.5 rounded-2xl font-black text-center text-sm hover:bg-[#00B074] hover:text-white transition-all shadow-sm block"
+                                        className="flex-grow bg-white text-[#F97316] border border-orange-100 hover:border-[#F97316] py-3 rounded-2xl font-bold text-center text-xs hover:bg-[#F97316]/5 transition-all shadow-sm cursor-pointer"
                                     >
-                                        View Details & More
+                                        Details
                                     </Link>
-                                    <div className="flex gap-3 w-full">
-                                        <button 
-                                            onClick={() => toggleWishlist(job.job_id)}
-                                            className={`p-4 rounded-2xl transition-all shadow-sm border cursor-pointer ${
-                                                wishlist.includes(job.job_id) 
-                                                    ? 'bg-[#00B074] text-white border-[#00B074]' 
-                                                    : 'bg-gray-50 text-[#00B074] border-transparent hover:bg-[#00B074] hover:text-white'
-                                            }`}
-                                            title={wishlist.includes(job.job_id) ? "Remove from Wishlist" : "Save to Wishlist"}
-                                        >
-                                            <Heart size={20} fill={wishlist.includes(job.job_id) ? "currentColor" : "none"} />
-                                        </button>
-                                        <button
-                                            onClick={() => applyJob(job.job_id, job.match_percentage)}
-                                            disabled={applying === job.job_id || appliedJobs.includes(job.job_id)}
-                                            className={`flex-grow font-black py-4 rounded-2xl transition-all flex justify-center items-center gap-2 text-sm active:scale-95 ${appliedJobs.includes(job.job_id)
+
+                                    <button
+                                        onClick={() => applyJob(job.job_id, job.match_percentage)}
+                                        disabled={applying === job.job_id || appliedJobs.includes(job.job_id)}
+                                        className={`flex-grow font-bold py-3.5 rounded-2xl transition-all flex justify-center items-center gap-2 text-xs active:scale-95 cursor-pointer shrink-0 ${
+                                            appliedJobs.includes(job.job_id)
                                                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
-                                                : 'bg-[#00B074] text-white hover:bg-[#009663] shadow-xl shadow-emerald-200 disabled:opacity-70'
-                                                }`}
-                                        >
-                                            {applying === job.job_id ? (
-                                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                            ) : appliedJobs.includes(job.job_id) ? (
-                                                <>
-                                                    Applied <CheckCircle size={16} />
-                                                </>
-                                            ) : (
-                                                <>
-                                                    Apply <Send size={16} />
-                                                </>
-                                            )}
-                                        </button>
-                                    </div>
+                                                : 'bg-[#F97316] text-white hover:bg-[#EA580C] shadow-md shadow-orange-500/10 disabled:opacity-70'
+                                        }`}
+                                    >
+                                        {applying === job.job_id ? (
+                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                        ) : appliedJobs.includes(job.job_id) ? (
+                                            <>Applied <CheckCircle size={14} /></>
+                                        ) : (
+                                            <>Apply <Send size={12} /></>
+                                        )}
+                                    </button>
                                 </div>
                             </motion.div>
                         ))}

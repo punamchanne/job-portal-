@@ -20,7 +20,7 @@ export default function Login() {
             localStorage.setItem('userName', res.data.name)
             navigate(`/${res.data.role}/dashboard`)
         } catch (err) {
-            alert("Oops! " + (err.response?.data?.detail || "Something went wrong. Please check your email and password."))
+            alert("Oops! " + (err.response?.data?.detail || "Something went wrong. Please check your credentials."))
         } finally {
             setLoading(false)
         }
@@ -28,57 +28,44 @@ export default function Login() {
 
     return (
         <div className="min-h-screen w-full flex flex-col md:flex-row bg-[#F8F9FA] overflow-hidden relative">
-            {/* Floating Back Button */}
-            <Link
-                to="/"
-                className="absolute top-8 left-8 md:left-auto md:right-8 z-30 flex items-center gap-2 text-gray-500 hover:text-[#00B074] font-bold transition-all bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-sm border border-gray-100 group"
-            >
-                <motion.span
-                    initial={{ x: 0 }}
-                    whileHover={{ x: -4 }}
-                >
-                    <ArrowLeft size={20} />
-                </motion.span>
-                Back to Home
-            </Link>
+
 
             {/* Left Side: Premium Brand Experience */}
-            <div className="hidden md:flex md:w-5/12 bg-[#00B074] relative items-center justify-center p-16 text-white">
-                {/* Dynamic Background Image */}
-                <div
-                    className="absolute inset-0 bg-cover bg-center opacity-40 scale-110"
-                    style={{ backgroundImage: `url(/hero-bg.png)` }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-br from-[#00B074]/80 to-black/40"></div>
+            <div className="hidden md:flex md:w-5/12 bg-[#111827] relative items-center justify-center p-16 text-white overflow-hidden border-r border-gray-800">
+                {/* Visual mesh background grid */}
+                <div className="absolute inset-0 bg-[radial-gradient(#1f2937_1px,transparent_1px)] [background-size:24px_24px] opacity-40"></div>
 
-                <div className="relative z-10 max-w-sm">
+                {/* Rotating Concentric Circles */}
+                <div className="absolute w-[280px] h-[280px] border border-orange-500/10 rounded-full -z-5 animate-spin-slow"></div>
+                <div className="absolute w-[360px] h-[360px] border border-dashed border-gray-800 rounded-full -z-5"></div>
+                <div className="absolute w-[440px] h-[440px] border border-gray-800/30 rounded-full -z-5 border-dashed"></div>
+
+                {/* Glowing Core */}
+                <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-[#F97316]/5 rounded-full blur-3xl -z-5 animate-pulse"></div>
+
+                <div className="relative z-10 max-w-sm text-left">
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1 }}
+                        transition={{ duration: 0.8 }}
                     >
-                        <div className="w-16 h-1 bg-white mb-8 rounded-full"></div>
-                        <h1 className="text-7xl font-black leading-[1.1] mb-8 tracking-tighter">
+                        <div className="w-12 h-1.5 bg-[#F97316] mb-8 rounded-full"></div>
+                        <h1 className="text-6xl font-black leading-[1.1] mb-6 tracking-tighter font-display text-white">
                             Ready to <br /> Work?
                         </h1>
-                        <p className="text-xl font-medium opacity-80 leading-relaxed">
-                            Sign in to access your AI-powered job matches and exclusive career coaching.
+                        <p className="text-gray-400 text-sm font-semibold leading-relaxed">
+                            Sign in to access your AI-powered job matches, customized recommendations, and recruiter feeds.
                         </p>
 
                         <div className="mt-16 flex items-center gap-4">
-                            <div className="flex -space-x-4">
+                            <div className="flex -space-x-3.5">
                                 {[1, 2, 3].map(i => (
-                                    <img key={i} src={`https://i.pravatar.cc/100?u=${i}`} className="w-12 h-12 rounded-full border-4 border-[#00B074]" alt="user" />
+                                    <img key={i} src={`https://i.pravatar.cc/100?u=${i + 200}`} className="w-10 h-10 rounded-full border-2 border-[#111827] shadow-sm" alt="user" />
                                 ))}
                             </div>
-                            <p className="text-sm font-bold">Join 10k+ professionals</p>
+                            <p className="text-xs font-bold text-gray-400">Join 18,000+ professionals</p>
                         </div>
                     </motion.div>
-                </div>
-
-                <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-                    <div className="absolute top-1/4 -left-20 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-black/10 rounded-full blur-3xl"></div>
                 </div>
             </div>
 
@@ -90,23 +77,23 @@ export default function Login() {
                     className="w-full max-w-md"
                 >
                     <div className="mb-12 flex flex-col items-center md:items-start text-center md:text-left">
-                        <Link to="/" className="bg-emerald-50 p-3 rounded-xl mb-6 inline-block hover:scale-105 transition-transform">
-                            <h2 className="text-3xl font-black text-[#00B074]">Jobify</h2>
+                        <Link to="/" className="bg-orange-50 p-3 rounded-2xl mb-6 inline-block hover:scale-105 transition-transform border border-orange-100/50">
+                            <h2 className="text-3xl font-black text-[#F97316]">Road2Job</h2>
                         </Link>
-                        <h2 className="text-4xl font-black text-gray-900 mb-3 tracking-tight">Login</h2>
-                        <p className="text-gray-500 font-bold text-lg">Just enter your details to get started.</p>
+                        <h2 className="text-4xl font-extrabold text-gray-900 mb-3 tracking-tight">Login</h2>
+                        <p className="text-gray-500 font-bold text-lg">Just enter your credentials to get started.</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-7">
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
                             <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Your Email</label>
                             <div className="relative group">
-                                <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#00B074] transition-colors" />
+                                <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#F97316] transition-colors" />
                                 <input
                                     type="email"
                                     required
-                                    placeholder="yourname@email.com"
-                                    className="w-full pl-14 pr-6 py-5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00B074]/20 focus:border-[#00B074] focus:bg-white transition-all font-medium text-lg shadow-sm"
+                                    placeholder="name@email.com"
+                                    className="w-full pl-14 pr-6 py-5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 focus:border-[#F97316] focus:bg-white transition-all font-semibold text-lg shadow-sm"
                                     onChange={e => setFormData({ ...formData, email: e.target.value })}
                                 />
                             </div>
@@ -115,15 +102,15 @@ export default function Login() {
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
                             <div className="flex justify-between items-center mb-2 px-1">
                                 <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Password</label>
-                                <a href="#" className="text-xs font-bold text-[#00B074] hover:underline">Forgot?</a>
+                                <a href="#" className="text-xs font-bold text-[#F97316] hover:underline">Forgot?</a>
                             </div>
                             <div className="relative group">
-                                <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#00B074] transition-colors" />
+                                <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300 group-focus-within:text-[#F97316] transition-colors" />
                                 <input
                                     type="password"
                                     required
                                     placeholder="Enter password"
-                                    className="w-full pl-14 pr-6 py-5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00B074]/20 focus:border-[#00B074] focus:bg-white transition-all font-medium text-lg shadow-sm"
+                                    className="w-full pl-14 pr-6 py-5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 focus:border-[#F97316] focus:bg-white transition-all font-semibold text-lg shadow-sm"
                                     onChange={e => setFormData({ ...formData, password: e.target.value })}
                                 />
                             </div>
@@ -134,7 +121,7 @@ export default function Login() {
                             whileTap={{ scale: 0.99 }}
                             type="submit"
                             disabled={loading}
-                            className="w-full py-5 bg-[#00B074] text-white rounded-2xl font-black text-lg hover:bg-[#009663] transition-all shadow-xl shadow-emerald-200 disabled:opacity-70 mt-4 relative overflow-hidden group"
+                            className="w-full py-5 bg-[#F97316] text-white rounded-2xl font-black text-lg hover:bg-[#EA580C] transition-all shadow-xl shadow-orange-100 disabled:opacity-70 mt-4 relative overflow-hidden group cursor-pointer"
                         >
                             <span className="relative z-10">{loading ? "Logging in..." : "Log In"}</span>
                             <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-[-30deg]"></div>
@@ -142,7 +129,7 @@ export default function Login() {
                     </form>
 
                     <p className="mt-12 text-center text-gray-400 font-bold">
-                        Don't have an account? <Link to="/signup" className="text-[#00B074] ml-1 hover:underline underline-offset-4">Create one</Link>
+                        Don't have an account? <Link to="/signup" className="text-[#F97316] ml-1 hover:underline underline-offset-4">Create one</Link>
                     </p>
                 </motion.div>
             </div>

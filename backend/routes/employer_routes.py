@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from typing import List
-from database import jobs_collection, companies_collection, applications_collection, users_collection
+from database import jobs_collection, companies_collection, applications_collection, users_collection, candidates_collection
 from models.job_model import JobCreate, JobResponse
 import uuid
 from datetime import datetime
@@ -24,17 +24,17 @@ def post_job(job: JobCreate, current_user_id: str):
         })
         company = companies_collection.find_one({"user_id": current_user_id})
 
-    job_dict = job.model_dump()
+    # Generate unique Job ID and set initial fields
+    job_dict = job.dict()
     job_dict["job_id"] = str(uuid.uuid4())
     job_dict["company_id"] = current_user_id
-    job_dict["company_name"] = company.get("company_name", "Unknown")
+    job_dict["company_name"] = company.get("company_name", "Employer")
     job_dict["created_at"] = datetime.utcnow()
-    # Save skills_required as alias for compatibility
-    job_dict["skills_required"] = job_dict.get("required_skills", [])
     
+    # Save to MongoDB
     jobs_collection.insert_one(job_dict)
     
-    job_dict["id"] = job_dict["job_id"]
+    # Return formatted response model
     return job_dict
 
 @router.get("/jobs/{user_id}")
@@ -43,21 +43,48 @@ def get_employer_jobs(user_id: str):
     return jobs
 
 @router.get("/dashboard/{user_id}")
-def get_dashboard_stats(user_id: str):
-    # Total jobs posted
+def get_employer_dashboard(user_id: str):
     jobs_count = jobs_collection.count_documents({"company_id": user_id})
     
-    # Needs to get all job IDs to count applicants
-    employer_jobs = list(jobs_collection.find({"company_id": user_id}))
+    # Get all job IDs for this employer
+    employer_jobs = list(jobs_collection.find({"company_id": user_id}, {"_id": 0}))
     job_ids = [job["job_id"] for job in employer_jobs]
     
     applicants_count = applications_collection.count_documents({"job_id": {"$in": job_ids}})
     shortlisted_count = applications_collection.count_documents({"job_id": {"$in": job_ids}, "status": "Shortlisted"})
     
+    # Recent jobs (last 3 posted)
+    recent_jobs = sorted(employer_jobs, key=lambda x: x.get("created_at", ""), reverse=True)[:3]
+    for job in recent_jobs:
+        if "created_at" in job and hasattr(job["created_at"], "isoformat"):
+            job["created_at"] = job["created_at"].isoformat()
+    
+    # Recent applicants (last 5 across all jobs)
+    recent_applications = list(applications_collection.find(
+        {"job_id": {"$in": job_ids}},
+        {"_id": 0}
+    ).sort("applied_at", -1).limit(5))
+    
+    # Enrich applicants with user and job info
+    for app in recent_applications:
+        user = users_collection.find_one({"id": app.get("candidate_id")}, {"_id": 0, "password": 0})
+        if not user:
+            user = users_collection.find_one({"user_id": app.get("candidate_id")}, {"_id": 0, "password": 0})
+        app["user"] = user or {}
+        
+        # Get job title
+        job_doc = jobs_collection.find_one({"job_id": app.get("job_id")}, {"_id": 0, "title": 1, "company_name": 1})
+        app["job_title"] = job_doc.get("title", "Unknown Job") if job_doc else "Unknown Job"
+        
+        if "applied_at" in app and hasattr(app["applied_at"], "isoformat"):
+            app["applied_at"] = app["applied_at"].isoformat()
+    
     return {
         "jobs_posted": jobs_count,
         "applicants_count": applicants_count,
-        "shortlisted_count": shortlisted_count
+        "shortlisted_count": shortlisted_count,
+        "recent_jobs": recent_jobs,
+        "recent_applicants": recent_applications
     }
 
 @router.get("/applicants/{job_id}")
@@ -69,7 +96,13 @@ def get_applicants(job_id: str, role: str = None):
     for app in applications:
         # get user info
         user = users_collection.find_one({"id": app["candidate_id"]}, {"_id": 0, "password": 0})
+        if not user:
+            user = users_collection.find_one({"user_id": app["candidate_id"]}, {"_id": 0, "password": 0})
         app["user"] = user
+        
+        # get candidate profile info
+        candidate = candidates_collection.find_one({"user_id": app["candidate_id"]}, {"_id": 0})
+        app["candidate"] = candidate if candidate else {}
     return applications
 
 @router.put("/applications/{application_id}/status")

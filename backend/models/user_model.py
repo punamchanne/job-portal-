@@ -9,7 +9,7 @@ class UserCreate(BaseModel):
     role: str = Field(..., description="Role must be 'admin', 'employer', or 'candidate'")
     organization_name: Optional[str] = None
     address: Optional[str] = None
-    contact_number: Optional[str] = None
+    contact_number: str
 
 class UserLogin(BaseModel):
     email: EmailStr

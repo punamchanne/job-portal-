@@ -6,6 +6,7 @@ from models.user_model import UserCreate, UserLogin, UserResponse, OTPVerify
 from database import users_collection, candidates_collection, companies_collection
 from utils.auth_utils import hash_password, verify_password, create_access_token
 from utils.email_utils import send_otp_email
+from utils.sms_utils import send_sms_otp
 import random
 from datetime import datetime, timedelta
 
@@ -21,8 +22,8 @@ def signup(user: UserCreate):
     user_dict["id"] = str(uuid.uuid4())
     user_dict["created_at"] = datetime.utcnow()
     
-    # Verification for employers
-    if user.role == "employer":
+    # Verification for employers and candidates
+    if user.role in ["employer", "candidate"]:
         user_dict["is_verified"] = False
         # Generate OTP
         otp = str(random.randint(100000, 999999))
@@ -30,6 +31,9 @@ def signup(user: UserCreate):
         user_dict["otp_expiry"] = datetime.utcnow() + timedelta(minutes=10)
         # Send Email with personalized greeting
         send_otp_email(user.email, otp, user_name=user.name)
+        # Send SMS if contact number is provided
+        if user.contact_number:
+            send_sms_otp(user.contact_number, otp)
     else:
         user_dict["is_verified"] = True
     
@@ -49,18 +53,20 @@ def signup(user: UserCreate):
         })
         
     return user_dict
-
+ 
 @router.post("/login")
 def login(user: UserLogin):
     db_user = users_collection.find_one({"email": user.email})
     if not db_user or not verify_password(user.password, db_user["password"]):
         raise HTTPException(status_code=400, detail="Invalid credentials")
         
-    if db_user.get("role") == "employer" and not db_user.get("is_verified", True):
+    if not db_user.get("is_verified", True):
         # Check if OTP exists
         if db_user.get("otp"):
-            raise HTTPException(status_code=403, detail="Please verify your email with the OTP sent during registration.")
-        raise HTTPException(status_code=403, detail="Profile is under verification by Admin. Please wait for approval.")
+            raise HTTPException(status_code=403, detail="Please verify your account with the OTP sent during registration.")
+        if db_user.get("role") == "employer":
+            raise HTTPException(status_code=403, detail="Profile is under verification by Admin. Please wait for approval.")
+        raise HTTPException(status_code=403, detail="Account is not verified.")
 
         
     access_token = create_access_token(data={"sub": db_user["id"], "role": db_user["role"]})
@@ -109,4 +115,8 @@ def resend_otp(payload: dict):
     
     # Re-send email with personalized greeting
     send_otp_email(email, otp, user_name=user.get('name', 'User'))
+    # Re-send SMS if contact number exists
+    contact_number = user.get("contact_number")
+    if contact_number:
+        send_sms_otp(contact_number, otp)
     return {"message": "OTP sent successfully"}

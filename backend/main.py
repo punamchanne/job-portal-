@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+import os
 from routes import auth_routes, candidate_routes, employer_routes, admin_routes, chatbot_routes
 from database import users_collection
 from config import settings
@@ -8,6 +10,10 @@ import uuid
 import datetime
 
 app = FastAPI(title="Jobify API", description="Production-ready AI-based Job and Internship Recommendation System", version="1.0.0")
+
+# Create uploads directory and mount static files
+os.makedirs("uploads", exist_ok=True)
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 @app.on_event("startup")
 async def create_admin():
@@ -45,3 +51,4 @@ def read_root():
     return {"message": "Welcome to Jobify API. System is up and running."}
 
 # to run: uvicorn main:app --reload
+

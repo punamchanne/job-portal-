@@ -15,7 +15,6 @@ export default function DashboardLayout({ children, role, userName }) {
     const location = useLocation()
     const userId = localStorage.getItem('userId')
 
-    // Check if candidate has a resume uploaded to adjust label
     useEffect(() => {
         if (role === 'candidate' && userId) {
             axios.get(`http://localhost:8000/api/candidate/profile/${userId}`)
@@ -26,7 +25,6 @@ export default function DashboardLayout({ children, role, userName }) {
         }
     }, [role, userId])
 
-    // Sidebar Links based on Role
     const adminLinks = [
         { name: 'Overview', path: '/admin/dashboard', icon: <LayoutDashboard size={20} /> },
         { name: 'Review Applicants', path: '/admin/applicants', icon: <FileText size={20} /> },
@@ -35,12 +33,12 @@ export default function DashboardLayout({ children, role, userName }) {
     ]
 
     const candidateLinks = [
-        { name: 'My Dashboard', path: '/candidate/dashboard', icon: <LayoutDashboard size={20} /> },
-        { name: 'My Profile', path: '/candidate/profile', icon: <User size={20} /> },
-        { name: 'Applied Jobs', path: '/candidate/applications', icon: <FileCheck size={20} /> },
-        { name: hasResume ? 'Update Resume' : 'My Resume', path: '/candidate/resume-upload', icon: <FileText size={20} /> },
-        { name: 'Best Jobs', path: '/candidate/recommendations', icon: <Target size={20} /> },
-        { name: 'Skill Check', path: '/candidate/skill-gap', icon: <Activity size={20} /> },
+        { name: 'Dashboard', path: '/candidate/dashboard', icon: <LayoutDashboard size={20} /> },
+        { name: 'Applications', path: '/candidate/applications', icon: <FileCheck size={20} /> },
+        { name: 'Resume', path: '/candidate/resume-upload', icon: <FileText size={20} /> },
+        { name: 'Recommendations', path: '/candidate/recommendations', icon: <Target size={20} /> },
+        { name: 'Skill Gap', path: '/candidate/skill-gap', icon: <Activity size={20} /> },
+        { name: 'Profile', path: '/candidate/profile', icon: <User size={20} /> },
     ]
 
     const employerLinks = [
@@ -67,13 +65,18 @@ export default function DashboardLayout({ children, role, userName }) {
                     {/* Sidebar Header */}
                     <div className="p-6 flex items-center justify-between">
                         {isSidebarOpen && (
-                            <Link to="/" className="text-3xl font-black text-[#00B074]">Jobify</Link>
+                            <Link to="/" className="flex items-center gap-2 group">
+                                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#F97316] to-[#FDBA74] flex items-center justify-center shadow-md">
+                                    <span className="text-white font-black text-sm italic">R</span>
+                                </div>
+                                <span className="text-xl font-black text-gray-900">Road<span className="text-[#F97316]">2Job</span></span>
+                            </Link>
                         )}
                         <button
                             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                            className="p-2 hover:bg-emerald-50 text-[#00B074] rounded-xl transition-colors"
+                            className="p-2 hover:bg-orange-50 text-[#F97316] rounded-xl transition-colors cursor-pointer"
                         >
-                            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+                            {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
                         </button>
                     </div>
 
@@ -85,13 +88,13 @@ export default function DashboardLayout({ children, role, userName }) {
                                 <Link
                                     key={link.name}
                                     to={link.path}
-                                    className={`flex items-center gap-4 px-4 py-4 rounded-2xl transition-all group ${isActive ? 'bg-[#00B074] text-white shadow-lg shadow-emerald-200' : 'text-gray-500 hover:bg-emerald-50 hover:text-[#00B074]'}`}
+                                    className={`flex items-center gap-4 px-4 py-4 rounded-2xl transition-all duration-300 group ${isActive ? 'bg-[#F97316] text-white shadow-lg shadow-orange-500/10' : 'text-gray-500 hover:bg-orange-50/50 hover:text-[#F97316]'}`}
                                 >
-                                    <div className={`${isActive ? 'text-white' : 'text-gray-400 group-hover:text-[#00B074]'} transition-colors`}>
+                                    <div className={`${isActive ? 'text-white' : 'text-gray-400 group-hover:text-[#F97316]'} transition-colors duration-300`}>
                                         {link.icon}
                                     </div>
                                     {isSidebarOpen && (
-                                        <span className="font-bold tracking-tight">{link.name}</span>
+                                        <span className="font-bold tracking-tight text-[15px]">{link.name}</span>
                                     )}
                                     {isActive && isSidebarOpen && (
                                         <motion.div layoutId="activeDot" className="ml-auto w-2 h-2 bg-white rounded-full"></motion.div>
@@ -105,10 +108,10 @@ export default function DashboardLayout({ children, role, userName }) {
                     <div className="p-4 mt-auto">
                         <button
                             onClick={handleLogout}
-                            className={`w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-red-500 hover:bg-red-50 transition-all group`}
+                            className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-red-500 hover:bg-red-50 transition-all group cursor-pointer"
                         >
                             <LogOut size={20} />
-                            {isSidebarOpen && <span className="font-bold tracking-tight">Sign Out</span>}
+                            {isSidebarOpen && <span className="font-bold tracking-tight text-[15px]">Sign Out</span>}
                         </button>
                     </div>
                 </div>
