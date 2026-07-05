@@ -7,15 +7,13 @@ from datetime import datetime
 
 router = APIRouter(prefix="/api/employer", tags=["employer"])
 
-@router.post("/jobs", response_model=JobResponse)
+@router.post("/jobs")
 def post_job(job: JobCreate, current_user_id: str):
     # Retrieve user's company info, auto-create if not found
     company = companies_collection.find_one({"user_id": current_user_id})
     if not company:
-        # Get user info for company name fallback
         user = users_collection.find_one({"id": current_user_id})
         user_name = user.get("name", "Employer") if user else "Employer"
-        # Auto-create company profile
         companies_collection.insert_one({
             "user_id": current_user_id,
             "company_name": f"{user_name}'s Company",
@@ -29,16 +27,15 @@ def post_job(job: JobCreate, current_user_id: str):
     job_dict["job_id"] = str(uuid.uuid4())
     job_dict["company_id"] = current_user_id
     job_dict["company_name"] = company.get("company_name", "Employer")
-    job_dict["created_at"] = datetime.utcnow()
-    
+    job_dict["created_at"] = datetime.utcnow().isoformat()
+
     # Save to MongoDB
     jobs_collection.insert_one(job_dict)
-    
-    # Remove MongoDB ObjectId before returning (not JSON serializable)
+
+    # Remove non-serializable MongoDB _id before returning
     job_dict.pop("_id", None)
-    
-    # Return formatted response model
-    return job_dict
+
+    return {"message": "Job posted successfully", "job_id": job_dict["job_id"]}
 
 @router.get("/jobs/{user_id}")
 def get_employer_jobs(user_id: str):
