@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X, Send } from 'lucide-react'
-import axios from 'axios'
+import api from '../config/api'
 
 export default function Chatbot() {
     const [isOpen, setIsOpen] = useState(false)
@@ -21,7 +21,7 @@ export default function Chatbot() {
 
         setIsTyping(true)
         try {
-            const res = await axios.post('http://localhost:8000/api/chatbot/ask', { message: input })
+            const res = await api.post('/api/chatbot/ask', { message: input })
             setMessages((prev) => [...prev, { text: res.data.reply, sender: "bot" }])
         } catch (err) {
             setMessages((prev) => [...prev, { text: "Sorry, I'm having trouble connecting to the server.", sender: "bot" }])

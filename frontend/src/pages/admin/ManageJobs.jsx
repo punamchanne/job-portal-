@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+﻿import React, { useEffect, useState } from 'react'
+import api from '../../config/api'
 import { Trash2, Briefcase, Search, MapPin, Building, Calendar, Filter } from 'lucide-react'
 import DashboardLayout from '../../components/DashboardLayout'
 import { motion } from 'framer-motion'
@@ -15,7 +15,7 @@ export default function ManageJobs() {
 
     const fetchJobs = async () => {
         try {
-            const res = await axios.get('http://localhost:8000/api/admin/jobs')
+            const res = await api.get('/api/admin/jobs')
             setJobs(res.data)
         } catch (err) { }
     }
@@ -23,7 +23,7 @@ export default function ManageJobs() {
     const deleteJob = async (jobId) => {
         if (!window.confirm("Are you sure you want to remove this job posting?")) return
         try {
-            await axios.delete(`http://localhost:8000/api/admin/jobs/${jobId}`)
+            await api.delete(`/api/admin/jobs/${jobId}`)
             fetchJobs()
         } catch (err) {
             alert("Error deleting job")

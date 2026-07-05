@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+﻿import React, { useEffect, useState } from 'react'
+import api from '../../config/api'
 import { Briefcase, MapPin, IndianRupee, CheckCircle, Sparkles, Send, Target, Heart, ArrowRight, Copy, Check } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -33,8 +33,8 @@ export default function Recommendations() {
                 if (!userId) return
 
                 const [recsRes, appsRes] = await Promise.all([
-                    axios.get(`http://localhost:8000/api/candidate/recommendations/${userId}`),
-                    axios.get(`http://localhost:8000/api/candidate/applications/${userId}`)
+                    api.get(`/api/candidate/recommendations/${userId}`),
+                    api.get(`/api/candidate/applications/${userId}`)
                 ])
 
                 setJobs(recsRes.data)
@@ -59,7 +59,7 @@ export default function Recommendations() {
     const applyJob = async (jobId, aiScore) => {
         setApplying(jobId)
         try {
-            await axios.post('http://localhost:8000/api/candidate/apply', {
+            await api.post('/api/candidate/apply', {
                 job_id: jobId,
                 candidate_id: userId,
                 match_score: aiScore

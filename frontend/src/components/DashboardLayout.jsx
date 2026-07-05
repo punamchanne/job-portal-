@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import {
     LayoutDashboard, Users, Briefcase,
@@ -7,7 +7,7 @@ import {
     Settings, Bell, ChevronRight, Plus, FileCheck, User, CheckCircle
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import axios from 'axios'
+import api from '../config/api'
 
 export default function DashboardLayout({ children, role, userName }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -17,7 +17,7 @@ export default function DashboardLayout({ children, role, userName }) {
 
     useEffect(() => {
         if (role === 'candidate' && userId) {
-            axios.get(`http://localhost:8000/api/candidate/profile/${userId}`)
+            api.get(`/api/candidate/profile/${userId}`)
                 .then(res => {
                     if (res.data.resume_path) setHasResume(true)
                 })

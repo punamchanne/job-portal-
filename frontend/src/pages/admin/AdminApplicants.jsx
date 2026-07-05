@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+﻿import React, { useEffect, useState } from 'react'
+import api from '../../config/api'
 import { UserCircle, CheckCircle, ChevronDown, Filter, Search, Mail, Target, ArrowRight, Shield } from 'lucide-react'
 import DashboardLayout from '../../components/DashboardLayout'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -14,7 +14,7 @@ export default function AdminApplicants() {
     useEffect(() => {
         const fetchJobs = async () => {
             try {
-                const res = await axios.get(`http://localhost:8000/api/admin/jobs`)
+                const res = await api.get(`/api/admin/jobs`)
                 setJobs(typeof res.data === 'string' ? JSON.parse(res.data.replace(/'/g, '"')) : res.data)
             } catch (err) { }
         }
@@ -27,7 +27,7 @@ export default function AdminApplicants() {
                 setLoading(true)
                 try {
                     const role = localStorage.getItem('role') || 'admin'
-                    const res = await axios.get(`http://localhost:8000/api/employer/applicants/${selectedJob}?role=${role}`)
+                    const res = await api.get(`/api/employer/applicants/${selectedJob}?role=${role}`)
                     const sortedApplicants = res.data.sort((a, b) => b.match_score - a.match_score)
                     setApplicants(sortedApplicants)
                 } catch (err) { }

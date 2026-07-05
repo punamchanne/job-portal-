@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api from '../config/api'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Briefcase, User, Mail, Lock, ChevronDown, ArrowLeft, Building, MapPin, Phone } from 'lucide-react'
 
@@ -15,7 +15,7 @@ export default function Signup() {
         e.preventDefault()
         setLoading(true)
         try {
-            await axios.post('http://localhost:8000/api/auth/signup', formData)
+            await api.post('/api/auth/signup', formData)
             setShowOTP(true)
             alert("An OTP has been sent to your email and phone number for verification.")
         } catch (err) {
@@ -29,7 +29,7 @@ export default function Signup() {
         e.preventDefault()
         setLoading(true)
         try {
-            await axios.post('http://localhost:8000/api/auth/verify-otp', { email: formData.email, otp })
+            await api.post('/api/auth/verify-otp', { email: formData.email, otp })
             alert("Success! Account verified. You can now log in.")
             navigate('/login')
         } catch (err) {
@@ -41,7 +41,7 @@ export default function Signup() {
 
     const handleResendOTP = async () => {
         try {
-            await axios.post('http://localhost:8000/api/auth/resend-otp', { email: formData.email })
+            await api.post('/api/auth/resend-otp', { email: formData.email })
             alert("OTP Resent successfully!")
         } catch (err) {
             alert("Error resending OTP")

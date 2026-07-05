@@ -18,3 +18,5 @@ dist/
 
 # Uploads
 backend/uploads/
+
+API_DOCUMENTATION.md

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FileText, Target, Activity, Send, Sparkles, Layout, ArrowRight, UserCheck, Zap, Bell, CheckCircle, X, Play } from 'lucide-react'
-import axios from 'axios'
+import api from '../../config/api'
 import { motion, AnimatePresence } from 'framer-motion'
 import DashboardLayout from '../../components/DashboardLayout'
 
@@ -16,12 +16,12 @@ export default function CandidateDashboard() {
         const fetchDashboardData = async () => {
             try {
                 // Fetch Apps
-                const appsRes = await axios.get(`http://localhost:8000/api/candidate/applications/${userId}`)
+                const appsRes = await api.get(`/api/candidate/applications/${userId}`)
                 setAppsCount(appsRes.data.length)
                 setApplications(appsRes.data.reverse().slice(0, 5))
 
                 // Check Profile
-                const profileRes = await axios.get(`http://localhost:8000/api/candidate/profile/${userId}`)
+                const profileRes = await api.get(`/api/candidate/profile/${userId}`)
                 if (!profileRes.data.resume_path || !profileRes.data.skills || profileRes.data.skills.length === 0) {
                     setShowProfileModal(true)
                 }

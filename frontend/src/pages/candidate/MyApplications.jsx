@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+﻿import React, { useEffect, useState } from 'react'
+import api from '../../config/api'
 import { CheckCircle, Clock, XCircle, Search, Target, MapPin, IndianRupee, Send } from 'lucide-react'
 import DashboardLayout from '../../components/DashboardLayout'
 import { motion } from 'framer-motion'
@@ -16,7 +16,7 @@ export default function MyApplications() {
         const fetchApplications = async () => {
             setLoading(true)
             try {
-                const res = await axios.get(`http://localhost:8000/api/candidate/applications/${userId}`)
+                const res = await api.get(`/api/candidate/applications/${userId}`)
                 setApplications(res.data)
             } catch (err) {
                 console.error(err)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
@@ -6,7 +6,7 @@ import {
     CheckCircle, AlertCircle, Sparkles, ExternalLink, 
     Youtube, ArrowRight, Lock, BookOpen, Clock, Heart
 } from 'lucide-react'
-import axios from 'axios'
+import api from '../config/api'
 
 export default function JobDetails() {
     const { jobId } = useParams()
@@ -54,22 +54,22 @@ export default function JobDetails() {
         const fetchJobData = async () => {
             try {
                 setLoading(true)
-                const jobRes = await axios.get(`http://localhost:8000/api/admin/jobs/${jobId}`)
+                const jobRes = await api.get(`/api/admin/jobs/${jobId}`)
                 setJob(jobRes.data)
                 
                 if (userId) {
-                    const appsRes = await axios.get(`http://localhost:8000/api/candidate/applications/${userId}`)
+                    const appsRes = await api.get(`/api/candidate/applications/${userId}`)
                     const alreadyApplied = appsRes.data.some(app => app.job_id === jobId)
                     setApplied(alreadyApplied)
                     
-                    const profileRes = await axios.get(`http://localhost:8000/api/candidate/profile/${userId}`)
+                    const profileRes = await api.get(`/api/candidate/profile/${userId}`)
                     setProfile(profileRes.data)
                     
                     if (profileRes.data.resume_path && profileRes.data.skills && profileRes.data.skills.length > 0) {
                         setHasResume(true)
                         setLoadingAI(true)
                         try {
-                            const gapRes = await axios.get(`http://localhost:8000/api/candidate/skill-gap/${userId}/${jobId}`)
+                            const gapRes = await api.get(`/api/candidate/skill-gap/${userId}/${jobId}`)
                             setSkillGap(gapRes.data)
                             
                             const req = gapRes.data.required_skills || []
@@ -108,7 +108,7 @@ export default function JobDetails() {
         
         setApplying(true)
         try {
-            await axios.post('http://localhost:8000/api/candidate/apply', {
+            await api.post('/api/candidate/apply', {
                 job_id: jobId,
                 candidate_id: userId,
                 match_score: matchPercentage !== null ? matchPercentage : 0

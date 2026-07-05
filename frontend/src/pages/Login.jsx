@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+﻿import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api from '../config/api'
 import { motion } from 'framer-motion'
 import { Mail, Lock, ArrowLeft } from 'lucide-react'
 
@@ -13,7 +13,7 @@ export default function Login() {
         e.preventDefault()
         setLoading(true)
         try {
-            const res = await axios.post('http://localhost:8000/api/auth/login', formData)
+            const res = await api.post('/api/auth/login', formData)
             localStorage.setItem('token', res.data.access_token)
             localStorage.setItem('role', res.data.role)
             localStorage.setItem('userId', res.data.id)

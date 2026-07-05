@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
     Briefcase, Plus, Search, MapPin, Clock,
     Users, ChevronRight, Frown, Filter, TrendingUp, IndianRupee
 } from 'lucide-react'
-import axios from 'axios'
+import api from '../../config/api'
 import { motion, AnimatePresence } from 'framer-motion'
 import DashboardLayout from '../../components/DashboardLayout'
 
@@ -18,7 +18,7 @@ export default function MyJobs() {
         const fetchJobs = async () => {
             try {
                 const userId = localStorage.getItem('userId')
-                const res = await axios.get(`http://localhost:8000/api/employer/jobs/${userId}`)
+                const res = await api.get(`/api/employer/jobs/${userId}`)
                 setJobs(res.data)
             } catch (err) {
                 console.error(err)

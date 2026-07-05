@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import axios from 'axios'
+﻿import React, { useState } from 'react'
+import api from '../../config/api'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircle, Briefcase, MapPin, IndianRupee, PenTool, Send, Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -18,7 +18,7 @@ export default function PostJob() {
         try {
             const userId = localStorage.getItem('userId')
             const payload = { ...formData, required_skills: formData.required_skills.split(',').map(s => s.trim()) }
-            await axios.post(`http://localhost:8000/api/employer/jobs?current_user_id=${userId}`, payload)
+            await api.post(`/api/employer/jobs?current_user_id=${userId}`, payload)
             setSuccess(true)
             setTimeout(() => navigate('/employer/dashboard'), 2000)
         } catch (err) {

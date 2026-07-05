@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import axios from 'axios'
+﻿import React, { useState } from 'react'
+import api from '../../config/api'
 import { Search, AlertTriangle, BookOpen, CheckCircle2, Zap, ArrowRight, Target, Activity } from 'lucide-react'
 import DashboardLayout from '../../components/DashboardLayout'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -17,7 +17,7 @@ export default function SkillGap() {
         setLoading(true)
         try {
             const userId = localStorage.getItem('userId')
-            const res = await axios.get(`http://localhost:8000/api/candidate/skill-gap/${userId}/${jobId}`)
+            const res = await api.get(`/api/candidate/skill-gap/${userId}/${jobId}`)
             setAnalysis(res.data)
         } catch (err) {
             alert("Oops! Could not find this Job ID. Please check and try again.")

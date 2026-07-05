@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Search, MapPin, TrendingUp, Heart, Briefcase, Filter, CheckCircle, Copy, Check } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
-import axios from 'axios'
+import api from '../config/api'
 
 export default function FindJobs() {
     const [searchTerm, setSearchTerm] = useState('')
@@ -73,11 +73,11 @@ export default function FindJobs() {
     useEffect(() => {
         const fetchJobsAndApps = async () => {
             try {
-                const jobsRes = await axios.get('http://localhost:8000/api/admin/jobs')
+                const jobsRes = await api.get('/api/admin/jobs')
                 setJobs(jobsRes.data)
 
                 if (userId) {
-                    const appsRes = await axios.get(`http://localhost:8000/api/candidate/applications/${userId}`)
+                    const appsRes = await api.get(`/api/candidate/applications/${userId}`)
                     setAppliedJobs(appsRes.data.map(app => app.job_id))
                 }
             } catch (err) {

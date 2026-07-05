@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import api, { API_BASE_URL } from '../../config/api'
 import { UserCircle, CheckCircle, ChevronDown, Filter, Search, Mail, Target, ArrowRight, FileText, Phone } from 'lucide-react'
 import DashboardLayout from '../../components/DashboardLayout'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -15,7 +15,7 @@ export default function Applicants() {
         const fetchJobs = async () => {
             try {
                 const userId = localStorage.getItem('userId')
-                const res = await axios.get(`http://localhost:8000/api/employer/jobs/${userId}`)
+                const res = await api.get(`/api/employer/jobs/${userId}`)
                 setJobs(typeof res.data === 'string' ? JSON.parse(res.data.replace(/'/g, '"')) : res.data)
             } catch (err) { }
         }
@@ -27,7 +27,7 @@ export default function Applicants() {
             const fetchApplicants = async () => {
                 setLoading(true)
                 try {
-                    const res = await axios.get(`http://localhost:8000/api/employer/applicants/${selectedJob}`)
+                    const res = await api.get(`/api/employer/applicants/${selectedJob}`)
                     const sortedApplicants = res.data.sort((a, b) => b.match_score - a.match_score)
                     setApplicants(sortedApplicants)
                 } catch (err) { }
@@ -41,9 +41,9 @@ export default function Applicants() {
 
     const handleShortlist = async (appId) => {
         try {
-            await axios.put(`http://localhost:8000/api/employer/applications/${appId}/status`, { status: 'Shortlisted' })
+            await api.put(`/api/employer/applications/${appId}/status`, { status: 'Shortlisted' })
             alert("Candidate Shortlisted!")
-            const res = await axios.get(`http://localhost:8000/api/employer/applicants/${selectedJob}`)
+            const res = await api.get(`/api/employer/applicants/${selectedJob}`)
             const sortedApplicants = res.data.sort((a, b) => b.match_score - a.match_score)
             setApplicants(sortedApplicants)
         } catch (err) {
@@ -192,7 +192,7 @@ export default function Applicants() {
 
                                             {app.candidate?.resume_path && (
                                                 <a 
-                                                    href={`http://localhost:8000/${app.candidate.resume_path.replace(/\\/g, '/').split('/').map(encodeURIComponent).join('/')}`}
+                                                    href={`${API_BASE_URL}/${app.candidate.resume_path.replace(/\\/g, '/').split('/').map(encodeURIComponent).join('/')}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-[#F97316] hover:text-[#EA580C] transition-colors cursor-pointer bg-orange-50/50 hover:bg-orange-50 px-3.5 py-2.5 rounded-xl border border-orange-100/30"

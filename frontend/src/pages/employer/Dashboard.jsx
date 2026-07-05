@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+﻿import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
     Briefcase, Users, Plus, Building, ArrowRight, UserCheck, TrendingUp,
     Eye, Clock, MapPin, Target, Mail, ChevronRight, FileText, Zap,
     IndianRupee, Activity, CheckCircle
 } from 'lucide-react'
-import axios from 'axios'
+import api from '../../config/api'
 import { motion } from 'framer-motion'
 import DashboardLayout from '../../components/DashboardLayout'
 
@@ -50,7 +50,7 @@ export default function EmployerDashboard() {
         const fetchStats = async () => {
             try {
                 const userId = localStorage.getItem('userId')
-                const res = await axios.get(`http://localhost:8000/api/employer/dashboard/${userId}`)
+                const res = await api.get(`/api/employer/dashboard/${userId}`)
                 setStats(res.data)
             } catch (err) {
                 console.error(err)

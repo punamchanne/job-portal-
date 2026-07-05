@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+﻿import React, { useEffect, useState } from 'react'
+import api from '../../config/api'
 import { Link } from 'react-router-dom'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { LayoutDashboard, Users, Briefcase, ShieldCheck, Globe, Activity, ArrowRight, UserPlus, FileCheck, CheckCircle } from 'lucide-react'
@@ -13,7 +13,7 @@ export default function AdminDashboard() {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const res = await axios.get('http://localhost:8000/api/admin/dashboard')
+                const res = await api.get('/api/admin/dashboard')
                 setStats(res.data)
             } catch (err) { }
         }

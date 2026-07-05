@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+﻿import React, { useEffect, useState } from 'react'
+import api from '../../config/api'
 import { Save, User, BookOpen, Briefcase, Award, Zap, Code, Check } from 'lucide-react'
 import { motion } from 'framer-motion'
 import DashboardLayout from '../../components/DashboardLayout'
@@ -34,7 +34,7 @@ export default function CandidateProfile() {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const res = await axios.get(`http://localhost:8000/api/candidate/profile/${userId}`)
+                const res = await api.get(`/api/candidate/profile/${userId}`)
                 if (res.data) {
                     setProfile({
                         name: res.data.name || "",
@@ -61,7 +61,7 @@ export default function CandidateProfile() {
     const handleSave = async () => {
         setSaving(true)
         try {
-            await axios.put(`http://localhost:8000/api/candidate/profile/${userId}`, profile)
+            await api.put(`/api/candidate/profile/${userId}`, profile)
             alert("Profile successfully updated!")
             setIsDirty(false)
         } catch (err) {

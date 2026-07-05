@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+﻿import React, { useState, useEffect } from 'react'
+import api from '../../config/api'
 import { UploadCloud, CheckCircle, Sparkles, FileText, X, ArrowRight, Zap, RefreshCw } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import DashboardLayout from '../../components/DashboardLayout'
@@ -15,7 +15,7 @@ export default function ResumeUpload() {
 
     useEffect(() => {
         if (userId) {
-            axios.get(`http://localhost:8000/api/candidate/profile/${userId}`)
+            api.get(`/api/candidate/profile/${userId}`)
                 .then(res => {
                     if (res.data.resume_path) setHasExistingResume(true)
                 })
@@ -31,7 +31,7 @@ export default function ResumeUpload() {
 
         setUploading(true)
         try {
-            const res = await axios.post(`http://localhost:8000/api/candidate/upload-resume/${userId}`, formData)
+            const res = await api.post(`/api/candidate/upload-resume/${userId}`, formData)
             setResult(res.data.data)
             setHasExistingResume(true)
         } catch (err) {

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+﻿import React, { useEffect, useState } from 'react'
+import api from '../../config/api'
 import { Trash2, UserCircle, Search, Filter, Shield, UserCheck, Mail, Users, CheckCircle } from 'lucide-react'
 import DashboardLayout from '../../components/DashboardLayout'
 import { motion } from 'framer-motion'
@@ -14,7 +14,7 @@ export default function ManageUsers() {
 
     const fetchUsers = async () => {
         try {
-            const res = await axios.get('http://localhost:8000/api/admin/users')
+            const res = await api.get('/api/admin/users')
             setUsers(res.data)
         } catch (err) { }
     }
@@ -22,7 +22,7 @@ export default function ManageUsers() {
     const deleteUser = async (userId) => {
         if (!window.confirm("Are you sure you want to delete this user? This cannot be undone.")) return
         try {
-            await axios.delete(`http://localhost:8000/api/admin/users/${userId}`)
+            await api.delete(`/api/admin/users/${userId}`)
             fetchUsers()
         } catch (err) {
             alert("Oops! Could not delete user.")
@@ -31,7 +31,7 @@ export default function ManageUsers() {
 
     const verifyUser = async (userId) => {
         try {
-            await axios.put(`http://localhost:8000/api/admin/users/${userId}/verify`)
+            await api.put(`/api/admin/users/${userId}/verify`)
             alert("Company verified successfully!")
             fetchUsers()
         } catch (err) {
