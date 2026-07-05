@@ -34,6 +34,9 @@ def post_job(job: JobCreate, current_user_id: str):
     # Save to MongoDB
     jobs_collection.insert_one(job_dict)
     
+    # Remove MongoDB ObjectId before returning (not JSON serializable)
+    job_dict.pop("_id", None)
+    
     # Return formatted response model
     return job_dict
 

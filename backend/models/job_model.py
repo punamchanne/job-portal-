@@ -11,9 +11,10 @@ class JobCreate(BaseModel):
     job_type: str = Field(default="Full Time")
 
 class JobResponse(JobCreate):
-    id: str
-    company_id: str
-    created_at: datetime
+    job_id: Optional[str] = None
+    id: Optional[str] = None
+    company_id: Optional[str] = None
+    created_at: Optional[datetime] = None
     company_name: Optional[str] = None
 
 class ApplicationCreate(BaseModel):
