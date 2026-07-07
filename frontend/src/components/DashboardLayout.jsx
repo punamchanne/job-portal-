@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import {
     LayoutDashboard, Users, Briefcase,
@@ -35,7 +35,6 @@ export default function DashboardLayout({ children, role, userName }) {
     const candidateLinks = [
         { name: 'Dashboard', path: '/candidate/dashboard', icon: <LayoutDashboard size={20} /> },
         { name: 'Applications', path: '/candidate/applications', icon: <FileCheck size={20} /> },
-        { name: 'Resume', path: '/candidate/resume-upload', icon: <FileText size={20} /> },
         { name: 'Recommendations', path: '/candidate/recommendations', icon: <Target size={20} /> },
         { name: 'Skill Gap', path: '/candidate/skill-gap', icon: <Activity size={20} /> },
         { name: 'Profile', path: '/candidate/profile', icon: <User size={20} /> },
