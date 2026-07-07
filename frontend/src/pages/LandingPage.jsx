@@ -5,7 +5,7 @@ import {
     Search, MapPin, Check, ArrowRight, Heart, Briefcase, Users,
     TrendingUp, Headset, UserCheck, BookOpen, PenTool, PieChart,
     Twitter, Facebook, Instagram, Linkedin, Quote, CheckCircle,
-    Cpu, Zap, Award, Sparkles, Building, ChevronDown,
+    Cpu, Zap, Award, Sparkles, Building, ChevronDown, CheckCircle2,
     Shield, BarChart2, Play, Code
 } from 'lucide-react'
 

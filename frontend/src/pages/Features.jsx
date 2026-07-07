@@ -89,28 +89,6 @@ export default function Features() {
                     ))}
                 </div>
             </section>
-
-            {/* Call to Action */}
-            <section className="py-24 bg-[#111827] text-white relative overflow-hidden border-t border-gray-950">
-                <div className="absolute inset-0 bg-[#F97316]/5 mix-blend-overlay opacity-30"></div>
-                <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#F97316]/10 rounded-full blur-3xl -z-5"></div>
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
-                
-                <div className="max-w-[1320px] mx-auto px-6 text-center flex flex-col items-center gap-6 relative z-10">
-                    <span className="text-[#F97316] font-bold text-xs uppercase tracking-widest">Join Road2Job</span>
-                    <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight max-w-2xl font-display">
-                        Experience the AI recruitment shift
-                    </h2>
-                    <p className="text-sm font-semibold text-gray-400 max-w-xl leading-relaxed">
-                        Open a free account today and let our parsing algorithms connect you directly to elite teams.
-                    </p>
-                    <div className="mt-4 flex gap-4">
-                        <Link to="/signup" className="btn-primary-job flex items-center gap-2">
-                            Get Started Now <ArrowRight size={16} />
-                        </Link>
-                    </div>
-                </div>
-            </section>
         </div>
     )
 }
