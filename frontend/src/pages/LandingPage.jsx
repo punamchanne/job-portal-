@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import {
     Search, MapPin, Check, ArrowRight, Heart, Briefcase, Users,
     TrendingUp, Headset, UserCheck, BookOpen, PenTool, PieChart,
-    Twitter, Facebook, Instagram, Linkedin, Quote, CheckCircle,
+    Twitter, Facebook, Instagram, Linkedin, Quote,
     Cpu, Zap, Award, Sparkles, Building, ChevronDown, CheckCircle2,
     Shield, BarChart2, Play, Code
 } from 'lucide-react'
@@ -15,8 +15,6 @@ export default function LandingPage() {
     const [wishlist, setWishlist] = useState(() => {
         try { return JSON.parse(localStorage.getItem('wishlist') || '[]') } catch { return [] }
     })
-    const [newsletterEmail, setNewsletterEmail] = useState('')
-    const [newsletterSuccess, setNewsletterSuccess] = useState(false)
     const [faqOpen, setFaqOpen] = useState(null)
     
     // Interactive demo state
@@ -36,14 +34,6 @@ export default function LandingPage() {
             localStorage.setItem('wishlist', JSON.stringify(updated))
             return updated
         })
-    }
-
-    const handleNewsletterSignup = (e) => {
-        e.preventDefault()
-        if (!newsletterEmail.trim()) return
-        setNewsletterSuccess(true)
-        setNewsletterEmail('')
-        setTimeout(() => setNewsletterSuccess(false), 4000)
     }
 
     const handleSearch = (e) => {
@@ -739,77 +729,32 @@ export default function LandingPage() {
             </section>
 
             {/* 12. FOOTER */}
-            <footer className="bg-[#111827] pt-24 pb-12 text-gray-400">
-                <div className="max-w-[1320px] mx-auto px-6 grid md:grid-cols-2 lg:grid-cols-4 gap-12 border-b border-gray-800 pb-16">
-                    <div className="flex flex-col gap-6">
-                        <Link to="/" className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#F97316] to-[#FDBA74] flex items-center justify-center">
-                                <span className="text-white font-black text-sm italic">R</span>
-                            </div>
-                            <span className="text-xl font-black text-white">Road<span className="text-[#F97316]">2Job</span></span>
-                        </Link>
-                        <p className="text-sm font-medium leading-relaxed text-gray-400/90">
-                            AI-Powered Hiring. Smarter Careers. Streamlining recruitment pipelines with smart matching scoring models.
-                        </p>
-                        <div className="flex gap-3">
-                            <a href="#" className="w-9 h-9 rounded-full border border-gray-850 flex items-center justify-center hover:bg-[#F97316] hover:border-[#F97316] hover:text-white transition-all"><Twitter size={16} /></a>
-                            <a href="#" className="w-9 h-9 rounded-full border border-gray-850 flex items-center justify-center hover:bg-[#F97316] hover:border-[#F97316] hover:text-white transition-all"><Facebook size={16} /></a>
-                            <a href="#" className="w-9 h-9 rounded-full border border-gray-850 flex items-center justify-center hover:bg-[#F97316] hover:border-[#F97316] hover:text-white transition-all"><Instagram size={16} /></a>
-                            <a href="#" className="w-9 h-9 rounded-full border border-gray-850 flex items-center justify-center hover:bg-[#F97316] hover:border-[#F97316] hover:text-white transition-all"><Linkedin size={16} /></a>
+            <footer className="bg-[#111827] py-12 text-gray-400">
+                <div className="max-w-[1320px] mx-auto px-6 flex flex-col items-center gap-6 text-center">
+                    {/* Logo */}
+                    <Link to="/" className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#F97316] to-[#FDBA74] flex items-center justify-center">
+                            <span className="text-white font-black text-sm italic">R</span>
                         </div>
-                    </div>
-                    
-                    <div className="flex flex-col gap-5">
-                        <h3 className="text-xs font-bold text-white uppercase tracking-wider">Company</h3>
-                        <div className="flex flex-col gap-3.5 text-xs font-semibold text-gray-400">
-                            <Link to="/about" className="hover:text-white transition-colors">About Us</Link>
-                            <Link to="/contact" className="hover:text-white transition-colors">Contact Us</Link>
-                            <Link to="/features" className="hover:text-white transition-colors">Our Features</Link>
-                            <Link to="/" className="hover:text-white transition-colors">Privacy Policy</Link>
-                            <Link to="/" className="hover:text-white transition-colors">Terms of Service</Link>
-                        </div>
+                        <span className="text-xl font-black text-white">Road<span className="text-[#F97316]">2Job</span></span>
+                    </Link>
+
+                    {/* Tagline */}
+                    <p className="text-sm font-medium text-gray-400/90 max-w-sm">
+                        AI-Powered Hiring. Smarter Careers.
+                    </p>
+
+                    {/* Social Icons */}
+                    <div className="flex gap-3">
+                        <a href="#" className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center hover:bg-[#F97316] hover:border-[#F97316] hover:text-white transition-all"><Twitter size={16} /></a>
+                        <a href="#" className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center hover:bg-[#F97316] hover:border-[#F97316] hover:text-white transition-all"><Facebook size={16} /></a>
+                        <a href="#" className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center hover:bg-[#F97316] hover:border-[#F97316] hover:text-white transition-all"><Instagram size={16} /></a>
+                        <a href="#" className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center hover:bg-[#F97316] hover:border-[#F97316] hover:text-white transition-all"><Linkedin size={16} /></a>
                     </div>
 
-                    <div className="flex flex-col gap-5">
-                        <h3 className="text-xs font-bold text-white uppercase tracking-wider">Platform Links</h3>
-                        <div className="flex flex-col gap-3.5 text-xs font-semibold text-gray-400">
-                            <Link to="/" className="hover:text-white transition-colors">Home Portal</Link>
-                            <Link to="/jobs" className="hover:text-white transition-colors">Find Jobs</Link>
-                            <Link to="/features" className="hover:text-white transition-colors">AI Analysis</Link>
-                            <Link to="/about" className="hover:text-white transition-colors">Platform Vision</Link>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-5">
-                        <h3 className="text-xs font-bold text-white uppercase tracking-wider">Subscribe</h3>
-                        <p className="text-xs font-semibold leading-relaxed text-gray-400/90">Stay updated with fresh openings and matching releases.</p>
-                        <form onSubmit={handleNewsletterSignup} className="relative mt-2">
-                            <input
-                                type="email"
-                                placeholder="Your work email"
-                                value={newsletterEmail}
-                                onChange={e => setNewsletterEmail(e.target.value)}
-                                className="w-full bg-gray-900 border border-gray-800 py-3.5 pl-5 pr-20 rounded-full focus:outline-none focus:border-[#F97316] text-white text-xs font-medium"
-                                required
-                            />
-                            <button type="submit" className="absolute right-1.5 top-1.5 bottom-1.5 bg-[#F97316] text-white px-4 rounded-full font-bold text-xs hover:bg-[#EA580C] transition-all cursor-pointer">
-                                Sign Up
-                            </button>
-                        </form>
-                        {newsletterSuccess && (
-                            <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold mt-2">
-                                <CheckCircle size={14} /> Thank you for subscribing!
-                            </div>
-                        )}
-                    </div>
-                </div>
-                <div className="max-w-[1320px] mx-auto px-6 mt-10 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-semibold border-t border-gray-800 pt-8">
-                    <p>© 2026 Road2Job Enterprise. All rights reserved.</p>
-                    <div className="flex gap-6">
-                        <Link to="/" className="hover:text-white transition-colors">Home</Link>
-                        <Link to="/about" className="hover:text-white transition-colors">About</Link>
-                        <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
-                        <Link to="/jobs" className="hover:text-white transition-colors">Jobs</Link>
+                    {/* Copyright */}
+                    <div className="border-t border-gray-800 pt-6 w-full text-xs font-semibold">
+                        <p>© 2026 Road2Job Enterprise. All rights reserved.</p>
                     </div>
                 </div>
             </footer>
