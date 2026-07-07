@@ -2,7 +2,8 @@ from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from typing import List
 from database import jobs_collection, companies_collection, applications_collection, users_collection, candidates_collection
 from models.job_model import JobCreate, JobResponse
-import uuid
+import random
+import string
 from datetime import datetime
 
 router = APIRouter(prefix="/api/employer", tags=["employer"])
@@ -22,9 +23,16 @@ def post_job(job: JobCreate, current_user_id: str):
         })
         company = companies_collection.find_one({"user_id": current_user_id})
 
-    # Generate unique Job ID and set initial fields
+    # Generate short unique Job ID  e.g. JOB-A3K9PX
+    def generate_job_id():
+        chars = string.ascii_uppercase + string.digits
+        while True:
+            short_id = "JOB-" + ''.join(random.choices(chars, k=6))
+            if not jobs_collection.find_one({"job_id": short_id}):
+                return short_id
+
     job_dict = job.dict()
-    job_dict["job_id"] = str(uuid.uuid4())
+    job_dict["job_id"] = generate_job_id()
     job_dict["company_id"] = current_user_id
     job_dict["company_name"] = company.get("company_name", "Employer")
     job_dict["created_at"] = datetime.utcnow().isoformat()
