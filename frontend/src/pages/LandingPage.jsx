@@ -5,8 +5,8 @@ import {
     Search, MapPin, Check, ArrowRight, Heart, Briefcase, Users,
     TrendingUp, Headset, UserCheck, BookOpen, PenTool, PieChart,
     Twitter, Facebook, Instagram, Linkedin, Quote, CheckCircle,
-    Cpu, Zap, Award, Sparkles, Building, ChevronDown, CheckCircle2,
-    Shield, BarChart2, X, Play, Code
+    Cpu, Zap, Award, Sparkles, Building, ChevronDown,
+    Shield, BarChart2, Play, Code
 } from 'lucide-react'
 
 export default function LandingPage() {
@@ -18,7 +18,6 @@ export default function LandingPage() {
     const [newsletterEmail, setNewsletterEmail] = useState('')
     const [newsletterSuccess, setNewsletterSuccess] = useState(false)
     const [faqOpen, setFaqOpen] = useState(null)
-    const [isYearly, setIsYearly] = useState(false)
     
     // Interactive demo state
     const [demoTab, setDemoTab] = useState('match')
@@ -663,70 +662,7 @@ export default function LandingPage() {
                 </div>
             </section>
 
-            {/* 9. PRICING SECTION (REALISTIC PRODUCTION DEPLOYMENT MODULE) */}
-            <section className="py-28 bg-white">
-                <div className="max-w-[1320px] mx-auto px-6">
-                    <div className="text-center max-w-2xl mx-auto mb-16">
-                        <span className="text-[#F97316] font-bold text-xs uppercase tracking-widest">Pricing Plans</span>
-                        <h2 className="text-4xl font-extrabold tracking-tight mt-3">Simple, Transparent Pricing</h2>
-                        <p className="text-gray-500 font-semibold text-sm mt-3">Find the package suited for Seekers and scaleup Employers.</p>
-                        
-                        {/* Period Toggle */}
-                        <div className="flex bg-gray-200/70 p-1 rounded-full w-fit mx-auto mt-8 items-center">
-                            <button onClick={() => setIsYearly(false)} className={`py-1.5 px-5 font-bold text-xs rounded-full transition-all cursor-pointer ${!isYearly ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'}`}>Monthly</button>
-                            <button onClick={() => setIsYearly(true)} className={`py-1.5 px-5 font-bold text-xs rounded-full transition-all cursor-pointer ${isYearly ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500'}`}>Yearly (Save 20%)</button>
-                        </div>
-                    </div>
 
-                    <div className="grid md:grid-cols-3 gap-8 items-stretch">
-                        {/* Seekers Plan */}
-                        <div className="bg-white p-8 rounded-[28px] border border-gray-100 flex flex-col justify-between shadow-sm relative overflow-hidden group">
-                            <div>
-                                <span className="text-[#F97316] text-[10px] font-black uppercase tracking-widest bg-orange-50 px-3 py-1 rounded-full">Seeker Basic</span>
-                                <p className="text-4xl font-extrabold text-gray-900 mt-6 tracking-tight">Free</p>
-                                <p className="text-gray-400 text-xs mt-2 font-semibold">Perfect for entry level job hunts</p>
-                                <ul className="grid gap-3.5 mt-8 text-xs font-semibold text-gray-600 border-t border-gray-50 pt-8">
-                                    <li className="flex items-center gap-2.5"><CheckCircle2 size={16} className="text-[#F97316]" /> Unlimited job search submissions</li>
-                                    <li className="flex items-center gap-2.5"><CheckCircle2 size={16} className="text-[#F97316]" /> 3 AI compatibility scores / month</li>
-                                    <li className="flex items-center gap-2.5 text-gray-350"><X size={16} className="text-gray-300" /> Basic skill gap tutorials</li>
-                                </ul>
-                            </div>
-                            <Link to="/signup" className="w-full py-3.5 mt-8 border border-gray-200 text-gray-700 rounded-full font-bold text-xs hover:border-[#F97316] hover:text-[#F97316] transition-all text-center">Get Started</Link>
-                        </div>
-
-                        {/* Seeker Premium */}
-                        <div className="bg-white p-8 rounded-[28px] border-2 border-[#F97316] flex flex-col justify-between shadow-md relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 bg-[#F97316] text-white text-[9px] font-black uppercase tracking-widest py-1 px-4 rounded-bl-xl shadow-sm">Popular</div>
-                            <div>
-                                <span className="text-[#F97316] text-[10px] font-black uppercase tracking-widest bg-orange-50 px-3 py-1 rounded-full">Seeker Premium</span>
-                                <p className="text-4xl font-extrabold text-gray-900 mt-6 tracking-tight">₹{isYearly ? "199" : "249"}<span className="text-xs text-gray-400 font-semibold font-normal"> / month</span></p>
-                                <p className="text-gray-400 text-xs mt-2 font-semibold">Unlock full AI capacity & video links</p>
-                                <ul className="grid gap-3.5 mt-8 text-xs font-semibold text-gray-600 border-t border-gray-50 pt-8">
-                                    <li className="flex items-center gap-2.5"><CheckCircle2 size={16} className="text-[#F97316]" /> Unlimited AI compatibility indexes</li>
-                                    <li className="flex items-center gap-2.5"><CheckCircle2 size={16} className="text-[#F97316]" /> Instant skill gap tutorials recommend</li>
-                                    <li className="flex items-center gap-2.5"><CheckCircle2 size={16} className="text-[#F97316]" /> Priority profile placement feed</li>
-                                </ul>
-                            </div>
-                            <Link to="/signup" className="w-full py-3.5 mt-8 bg-[#F97316] text-white rounded-full font-bold text-xs hover:bg-[#EA580C] shadow-md shadow-orange-500/10 transition-all text-center">Subscribe Now</Link>
-                        </div>
-
-                        {/* Recruiter Premium */}
-                        <div className="bg-white p-8 rounded-[28px] border border-gray-100 flex flex-col justify-between shadow-sm relative overflow-hidden group">
-                            <div>
-                                <span className="text-[#F97316] text-[10px] font-black uppercase tracking-widest bg-orange-50 px-3 py-1 rounded-full">Employer Scale</span>
-                                <p className="text-4xl font-extrabold text-gray-900 mt-6 tracking-tight">₹{isYearly ? "1,999" : "2,499"}<span className="text-xs text-gray-400 font-semibold font-normal"> / month</span></p>
-                                <p className="text-gray-400 text-xs mt-2 font-semibold">Post job listings & screen matching talent</p>
-                                <ul className="grid gap-3.5 mt-8 text-xs font-semibold text-gray-600 border-t border-gray-50 pt-8">
-                                    <li className="flex items-center gap-2.5"><CheckCircle2 size={16} className="text-[#F97316]" /> Unlimited job postings publishing</li>
-                                    <li className="flex items-center gap-2.5"><CheckCircle2 size={16} className="text-[#F97316]" /> Ranked matching score applicant feed</li>
-                                    <li className="flex items-center gap-2.5"><CheckCircle2 size={16} className="text-[#F97316]" /> Dedicated accounts manager support</li>
-                                </ul>
-                            </div>
-                            <Link to="/signup" className="w-full py-3.5 mt-8 border border-gray-200 text-gray-700 rounded-full font-bold text-xs hover:border-[#F97316] hover:text-[#F97316] transition-all text-center">Unlock Employer Hub</Link>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             {/* 10. CLIENT TESTIMONIALS */}
             <section className="py-28 bg-gray-50/50 border-t border-b border-gray-100">
