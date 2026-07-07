@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
+import api from '../config/api'
 import {
     Search, MapPin, Check, ArrowRight, Heart, Briefcase, Users,
     TrendingUp, Headset, UserCheck, BookOpen, PenTool, PieChart,
     Twitter, Facebook, Instagram, Linkedin, Quote,
     Cpu, Zap, Award, Sparkles, Building, ChevronDown, CheckCircle2,
-    Shield, BarChart2, Play, Code
+    Shield, BarChart2, Play, Code, Share2, Eye
 } from 'lucide-react'
 
 export default function LandingPage() {
@@ -16,6 +17,9 @@ export default function LandingPage() {
         try { return JSON.parse(localStorage.getItem('wishlist') || '[]') } catch { return [] }
     })
     const [faqOpen, setFaqOpen] = useState(null)
+    const [jobs, setJobs] = useState([])
+    const [jobsLoading, setJobsLoading] = useState(true)
+    const [copiedJobId, setCopiedJobId] = useState(null)
     
     // Interactive demo state
     const [demoTab, setDemoTab] = useState('match')
@@ -23,8 +27,25 @@ export default function LandingPage() {
     // Industry Showcase state (matching reference tab design)
     const [industryTab, setIndustryTab] = useState('tech')
 
-    const navigate = useNavigate()
-    const role = localStorage.getItem('role')
+    useEffect(() => {
+        api.get('/api/employer/all-jobs')
+            .then(res => setJobs(res.data))
+            .catch(() => setJobs([]))
+            .finally(() => setJobsLoading(false))
+    }, [])
+
+    const shareJob = async (job) => {
+        const url = `${window.location.origin}/jobs/${job.job_id}`
+        const text = `Check out this job: ${job.title} at ${job.company_name || job.company} on Road2Job!`
+        if (navigator.share) {
+            try { await navigator.share({ title: job.title, text, url }) } catch {}
+        } else {
+            navigator.clipboard.writeText(url)
+            setCopiedJobId(job.job_id)
+            setTimeout(() => setCopiedJobId(null), 2000)
+        }
+    }
+
 
     const toggleWishlist = (jobTitle) => {
         setWishlist(prev => {
@@ -52,18 +73,12 @@ export default function LandingPage() {
         { icon: <Briefcase size={24} />, name: "Sales & Management", vacancies: "110 Vacancies" },
     ]
 
-    const allJobs = [
-        { title: "Senior AI Engineer", company: "AeroTech Solutions", location: "Bangalore (Remote)", type: "Full Time", salary: "₹18L - ₹32L" },
-        { title: "Lead Product Designer", company: "Vercel India Partner", location: "Pune, India", type: "Full Time", salary: "₹15L - ₹24L" },
-        { title: "Growth Marketing Manager", company: "Stripe India Support", location: "Mumbai, India", type: "Full Time", salary: "₹10L - ₹18L" },
-        { title: "Technical Product Manager", company: "Deel Solutions", location: "Remote", type: "Full Time", salary: "₹16L - ₹28L" },
-        { title: "Frontend Developer (React)", company: "Arc.dev Corp", location: "Delhi, India", type: "Part Time", salary: "₹6L - ₹10L" },
-        { title: "Talent Acquisition Partner", company: "Wellfound Agency", location: "Hyderabad, India", type: "Part Time", salary: "₹5L - ₹8L" },
-    ]
+    const navigate = useNavigate()
+    const role = localStorage.getItem('role')
 
     const filteredJobs = activeTab === 'Featured'
-        ? allJobs
-        : allJobs.filter(j => j.type === activeTab)
+        ? jobs
+        : jobs.filter(j => j.job_type === activeTab || j.type === activeTab)
 
     const marqueeCompanies = [
         "Google", "Microsoft", "Stripe", "Vercel", "Linear", "Deel", "Turing", "Wellfound", "Amazon", "Meta"
@@ -602,13 +617,15 @@ export default function LandingPage() {
 
                     {/* Jobs grid */}
                     <div className="flex flex-col gap-6">
-                        {filteredJobs.length === 0 ? (
+                        {jobsLoading ? (
+                            <div className="text-center py-16 text-gray-400 font-bold">Loading jobs...</div>
+                        ) : filteredJobs.length === 0 ? (
                             <div className="text-center py-16 text-gray-400 font-bold border border-dashed rounded-[24px]">
                                 No matches found in this category.
                             </div>
-                        ) : filteredJobs.map((job, i) => (
+                        ) : filteredJobs.slice(0, 6).map((job, i) => (
                             <motion.div
-                                key={i}
+                                key={job.job_id || i}
                                 className="p-6 bg-white border border-gray-100 rounded-3xl flex flex-col md:flex-row items-center gap-6 transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-gray-100/50 hover:border-orange-200"
                                 initial={{ opacity: 0, y: 15 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -616,28 +633,42 @@ export default function LandingPage() {
                                 viewport={{ once: true }}
                             >
                                 <div className="w-16 h-16 border border-gray-100 rounded-2xl flex items-center justify-center shrink-0 bg-orange-50 font-black text-xl text-[#F97316]">
-                                    {job.company.charAt(0).toUpperCase()}
+                                    {(job.company_name || job.company || 'J').charAt(0).toUpperCase()}
                                 </div>
 
                                 <div className="flex-grow">
-                                    <h3 className="text-xl font-bold text-gray-900 tracking-tight">{job.title}</h3>
-                                    <p className="text-sm font-semibold text-[#F97316] mt-0.5">{job.company}</p>
+                                    <h3 className="text-xl font-bold text-gray-900 tracking-tight">
+                                        {job.title || 'Job Title'}
+                                    </h3>
+                                    <p className="text-sm font-semibold text-[#F97316] mt-0.5">
+                                        {job.company_name || job.company || 'Company'}
+                                    </p>
                                     <div className="flex flex-wrap gap-x-6 gap-y-2 mt-3 text-xs font-semibold text-gray-500">
-                                        <span className="flex items-center gap-1.5"><MapPin size={14} className="text-gray-400" /> {job.location}</span>
-                                        <span className="flex items-center gap-1.5"><Briefcase size={14} className="text-gray-400" /> {job.type}</span>
-                                        <span className="flex items-center gap-1.5"><TrendingUp size={14} className="text-gray-400" /> {job.salary}</span>
+                                        <span className="flex items-center gap-1.5"><MapPin size={14} className="text-gray-400" /> {job.location || 'Remote'}</span>
+                                        <span className="flex items-center gap-1.5"><Briefcase size={14} className="text-gray-400" /> {job.job_type || job.type || 'Full Time'}</span>
+                                        {job.salary && <span className="flex items-center gap-1.5"><TrendingUp size={14} className="text-gray-400" /> {job.salary}</span>}
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col sm:flex-row items-center gap-3.5 shrink-0 w-full sm:w-auto">
+                                <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 w-full sm:w-auto">
+                                    {/* Share button */}
                                     <button
-                                        onClick={() => toggleWishlist(job.title)}
-                                        className={`p-3.5 rounded-full border transition-all duration-300 cursor-pointer ${wishlist.includes(job.title) ? 'bg-[#F97316] border-[#F97316] text-white' : 'bg-white border-gray-200 text-gray-400 hover:border-[#F97316] hover:text-[#F97316]'}`}
+                                        onClick={() => shareJob(job)}
+                                        className="p-3.5 rounded-full border border-gray-200 text-gray-400 hover:border-[#F97316] hover:text-[#F97316] transition-all duration-300 cursor-pointer"
+                                        title="Share this job"
                                     >
-                                        <Heart size={16} fill={wishlist.includes(job.title) ? "currentColor" : "none"} />
+                                        {copiedJobId === job.job_id
+                                            ? <Check size={16} className="text-green-500" />
+                                            : <Share2 size={16} />
+                                        }
                                     </button>
-                                    <Link to={role ? `/${role}/dashboard` : '/login'} className="btn-primary-job py-3.5 px-6 text-center w-full sm:w-auto shadow-none">
-                                        Apply Now
+
+                                    {/* Details button → /signup if not logged in */}
+                                    <Link
+                                        to={role ? `/jobs/${job.job_id}` : '/signup'}
+                                        className="flex items-center gap-2 btn-primary-job py-3.5 px-6 text-center w-full sm:w-auto shadow-none"
+                                    >
+                                        <Eye size={15} /> Details
                                     </Link>
                                 </div>
                             </motion.div>

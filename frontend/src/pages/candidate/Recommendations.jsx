@@ -1,6 +1,6 @@
-﻿import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import api from '../../config/api'
-import { Briefcase, MapPin, IndianRupee, CheckCircle, Sparkles, Send, Target, Heart, ArrowRight, Copy, Check } from 'lucide-react'
+import { Briefcase, MapPin, IndianRupee, CheckCircle, Sparkles, Send, Target, Heart, ArrowRight, Copy, Check, Share2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import DashboardLayout from '../../components/DashboardLayout'
@@ -54,6 +54,18 @@ export default function Recommendations() {
         navigator.clipboard.writeText(text)
         setCopiedId(text)
         setTimeout(() => setCopiedId(null), 2000)
+    }
+
+    const shareJob = async (job) => {
+        const url = `${window.location.origin}/jobs/${job.job_id}`
+        const text = `Check out this job: ${job.title} at ${job.company_name || ''} on Road2Job!`
+        if (navigator.share) {
+            try { await navigator.share({ title: job.title, text, url }) } catch {}
+        } else {
+            navigator.clipboard.writeText(url)
+            setCopiedId(url)
+            setTimeout(() => setCopiedId(null), 2000)
+        }
     }
 
     const applyJob = async (jobId, aiScore) => {
@@ -185,7 +197,7 @@ export default function Recommendations() {
                                     </div>
                                 </div>
 
-                                {/* Refined Actions: wishlist, details and apply in single row */}
+                                {/* Refined Actions: wishlist, details, share and apply in single row */}
                                 <div className="flex items-center gap-3.5 w-full mt-auto">
                                     <button 
                                         onClick={() => toggleWishlist(job.job_id)}
@@ -204,6 +216,17 @@ export default function Recommendations() {
                                     >
                                         Details
                                     </Link>
+
+                                    {/* Share button */}
+                                    <button
+                                        onClick={() => shareJob(job)}
+                                        className="p-3.5 rounded-2xl border border-gray-150 text-gray-400 hover:border-[#F97316] hover:text-[#F97316] transition-all shadow-sm cursor-pointer shrink-0"
+                                        title="Share job"
+                                    >
+                                        {copiedId === `${window.location.origin}/jobs/${job.job_id}`
+                                            ? <Check size={15} className="text-green-500" />
+                                            : <Share2 size={15} />}
+                                    </button>
 
                                     <button
                                         onClick={() => applyJob(job.job_id, job.match_percentage)}

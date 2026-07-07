@@ -37,6 +37,12 @@ def post_job(job: JobCreate, current_user_id: str):
 
     return {"message": "Job posted successfully", "job_id": job_dict["job_id"]}
 
+@router.get("/all-jobs")
+def get_all_jobs():
+    """Public endpoint — returns all job listings for home page display"""
+    jobs = list(jobs_collection.find({}, {"_id": 0}))
+    return jobs
+
 @router.get("/jobs/{user_id}")
 def get_employer_jobs(user_id: str):
     jobs = list(jobs_collection.find({"company_id": user_id}, {"_id": 0}))
