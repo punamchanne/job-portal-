@@ -1,8 +1,9 @@
-﻿import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import api from '../../config/api'
 import { Save, User, BookOpen, Briefcase, Award, Zap, Code, Check } from 'lucide-react'
 import { motion } from 'framer-motion'
 import DashboardLayout from '../../components/DashboardLayout'
+import SkillsInput from '../../components/SkillsInput'
 
 export default function CandidateProfile() {
     const userName = localStorage.getItem('userName') || "User"
@@ -221,22 +222,14 @@ export default function CandidateProfile() {
                     {/* Skills */}
                     <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white p-8 rounded-[28px] border border-gray-100 shadow-sm flex flex-col gap-5">
                         <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 tracking-tight"><Code className="text-[#F97316]" size={22} /> Professional Skills</h3>
-                        <div className="flex flex-wrap gap-1.5">
-                            {profile.skills.map((s, i) => (
-                                <span key={i} className="bg-orange-50 text-[#F97316] px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 border border-orange-100/30 uppercase tracking-wider">
-                                    {s}
-                                    <button onClick={() => handleRemoveItem('skills', i)} className="text-orange-300 hover:text-orange-700 font-bold transition-colors cursor-pointer">&times;</button>
-                                </span>
-                            ))}
-                        </div>
-                        <div className="flex mt-2">
-                            <input
-                                type="text" placeholder="Add a skill (e.g. React, Docker)" className="flex-grow bg-gray-50 border border-gray-100 border-r-0 px-5 py-3 rounded-l-2xl font-semibold text-sm focus:outline-none focus:border-[#F97316]"
-                                value={inputs.skill} onChange={e => setInputs(prev => ({ ...prev, skill: e.target.value }))}
-                                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddItem('skills', 'skill'); } }}
-                            />
-                            <button onClick={() => handleAddItem('skills', 'skill')} className="bg-[#111827] text-white px-6 rounded-r-2xl font-bold hover:bg-black transition-colors cursor-pointer">Add</button>
-                        </div>
+                        <SkillsInput 
+                            value={profile.skills}
+                            onChange={skills => {
+                                setProfile(prev => ({ ...prev, skills }));
+                                markDirty();
+                            }}
+                            placeholder="Type a skill (e.g. React, Python)"
+                        />
                     </motion.div>
 
                     {/* Education */}

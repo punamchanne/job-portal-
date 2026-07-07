@@ -1,23 +1,28 @@
-﻿import React, { useState } from 'react'
+import React, { useState } from 'react'
 import api from '../../config/api'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircle, Briefcase, MapPin, IndianRupee, PenTool, Send, Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
 import DashboardLayout from '../../components/DashboardLayout'
+import SkillsInput from '../../components/SkillsInput'
 
 export default function PostJob() {
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
-        title: '', description: '', location: '', salary: '', required_skills: '', job_type: 'Full Time'
+        title: '', description: '', location: '', salary: '', required_skills: [], job_type: 'Full Time'
     })
     const [success, setSuccess] = useState(false)
     const userName = localStorage.getItem('userName') || "Partner"
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if (formData.required_skills.length === 0) {
+            alert("⚠️ Please add at least one required skill!")
+            return
+        }
         try {
             const userId = localStorage.getItem('userId')
-            const payload = { ...formData, required_skills: formData.required_skills.split(',').map(s => s.trim()) }
+            const payload = { ...formData }
             await api.post(`/api/employer/jobs?current_user_id=${userId}`, payload)
             setSuccess(true)
             setTimeout(() => navigate('/employer/dashboard'), 2000)
@@ -113,13 +118,16 @@ export default function PostJob() {
                                 </div>
                             </div>
 
-                            {/* Row 3: Skills */}
+                            {/* Row 3: Skills with Auto-suggest tags */}
                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Required Skills (comma separated)</label>
-                                <div className="flex items-center bg-gray-50 px-6 py-4 rounded-full border border-gray-100 focus-within:border-[#F97316] focus-within:bg-white transition-all duration-300">
-                                    <PenTool className="text-gray-400 mr-3 shrink-0" size={18} />
-                                    <input type="text" required placeholder="e.g. React, Node.js, Docker, AWS" className="w-full bg-transparent border-0 focus:outline-none focus:ring-0 font-semibold text-gray-800 placeholder:text-gray-300 text-sm"
-                                        value={formData.required_skills} onChange={e => setFormData({ ...formData, required_skills: e.target.value })} />
+                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Required Skills</label>
+                                <div className="flex items-start bg-gray-50 px-6 py-4 rounded-3xl border border-gray-100 focus-within:border-[#F97316] focus-within:bg-white transition-all duration-300 gap-3">
+                                    <PenTool className="text-gray-400 mt-4 shrink-0" size={18} />
+                                    <SkillsInput 
+                                        value={formData.required_skills} 
+                                        onChange={skills => setFormData({ ...formData, required_skills: skills })}
+                                        placeholder="Add required skills (e.g. React, Node.js)"
+                                    />
                                 </div>
                             </div>
 
