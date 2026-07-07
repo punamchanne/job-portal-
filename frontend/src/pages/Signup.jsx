@@ -1,8 +1,8 @@
-﻿import React, { useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import api from '../config/api'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Briefcase, User, Mail, Lock, ChevronDown, ArrowLeft, Building, MapPin, Phone } from 'lucide-react'
+import { Briefcase, User, Mail, Lock, ArrowLeft, Building, MapPin, Phone } from 'lucide-react'
 
 export default function Signup() {
     const navigate = useNavigate()
@@ -213,16 +213,57 @@ export default function Signup() {
                             </AnimatePresence>
 
                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Account Type</label>
-                                <div className="relative mt-2">
-                                    <select
-                                        className="w-full pl-6 pr-10 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 focus:border-[#F97316] focus:bg-white transition-all font-bold text-gray-700 appearance-none cursor-pointer"
-                                        onChange={e => setFormData({ ...formData, role: e.target.value })}
+                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1 mb-3 block">I am a...</label>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {/* Candidate Card */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setFormData({ ...formData, role: 'candidate' })}
+                                        className={`relative flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border-2 transition-all cursor-pointer group ${
+                                            formData.role === 'candidate'
+                                                ? 'border-[#F97316] bg-orange-50 shadow-md shadow-orange-100'
+                                                : 'border-gray-100 bg-gray-50 hover:border-orange-200 hover:bg-orange-50/30'
+                                        }`}
                                     >
-                                        <option value="candidate">I want a job</option>
-                                        <option value="employer">I want to hire people</option>
-                                    </select>
-                                    <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                                        {formData.role === 'candidate' && (
+                                            <div className="absolute top-3 right-3 w-4 h-4 bg-[#F97316] rounded-full flex items-center justify-center">
+                                                <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 12 12">
+                                                    <path d="M10 3L5 8.5 2 5.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                                                </svg>
+                                            </div>
+                                        )}
+                                        <div className={`p-3 rounded-xl transition-all ${formData.role === 'candidate' ? 'bg-[#F97316] text-white' : 'bg-white text-gray-400 group-hover:text-[#F97316]'}`}>
+                                            <User size={24} />
+                                        </div>
+                                        <div className="text-center">
+                                            <p className={`font-black text-sm ${formData.role === 'candidate' ? 'text-[#F97316]' : 'text-gray-700'}`}>Student / Candidate</p>
+                                        </div>
+                                    </button>
+
+                                    {/* Employer Card */}
+                                    <button
+                                        type="button"
+                                        onClick={() => setFormData({ ...formData, role: 'employer' })}
+                                        className={`relative flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border-2 transition-all cursor-pointer group ${
+                                            formData.role === 'employer'
+                                                ? 'border-[#F97316] bg-orange-50 shadow-md shadow-orange-100'
+                                                : 'border-gray-100 bg-gray-50 hover:border-orange-200 hover:bg-orange-50/30'
+                                        }`}
+                                    >
+                                        {formData.role === 'employer' && (
+                                            <div className="absolute top-3 right-3 w-4 h-4 bg-[#F97316] rounded-full flex items-center justify-center">
+                                                <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 12 12">
+                                                    <path d="M10 3L5 8.5 2 5.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                                                </svg>
+                                            </div>
+                                        )}
+                                        <div className={`p-3 rounded-xl transition-all ${formData.role === 'employer' ? 'bg-[#F97316] text-white' : 'bg-white text-gray-400 group-hover:text-[#F97316]'}`}>
+                                            <Building size={24} />
+                                        </div>
+                                        <div className="text-center">
+                                            <p className={`font-black text-sm ${formData.role === 'employer' ? 'text-[#F97316]' : 'text-gray-700'}`}>Company / Recruiter</p>
+                                        </div>
+                                    </button>
                                 </div>
                             </motion.div>
 
